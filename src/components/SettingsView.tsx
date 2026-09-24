@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Settings, Save, Check } from 'lucide-react';
 import { SystemSettings, ResultOption } from '../types.js';
 import { api } from '../services/api.js';
+import { DATE_FORMAT_OPTIONS, setStoredDateFormat, DateFormatPattern } from '../utils/date.js';
 
 interface Props {
   settings: SystemSettings;
@@ -149,12 +150,33 @@ export const SettingsView: React.FC<Props> = ({
 
             <div>
               <label className="block text-neutral-400 mb-1">Display Date Standard</label>
-              <input
-                type="text"
-                value="DD-MM-YYYY (Mandatory)"
-                disabled
-                className="w-full h-8 px-3 bg-neutral-950/60 border border-neutral-800 rounded text-neutral-400 font-mono"
-              />
+              <select
+                value={form.dateFormat || 'DD-MM-YYYY'}
+                onChange={(e) => {
+                  const val = e.target.value;
+                  setForm({ ...form, dateFormat: val });
+                  setStoredDateFormat(val as DateFormatPattern);
+                }}
+                className="w-full h-8 px-2.5 bg-neutral-950 border border-neutral-700 rounded text-amber-300 font-mono text-xs focus:outline-none focus:border-amber-500"
+              >
+                {DATE_FORMAT_OPTIONS.map((opt) => (
+                  <option key={opt.id} value={opt.id}>
+                    {opt.label} — e.g. {opt.example}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div>
+              <label className="block text-neutral-400 mb-1">Visual Theme</label>
+              <select
+                value={form.theme || 'dark'}
+                onChange={(e) => setForm({ ...form, theme: e.target.value })}
+                className="w-full h-8 px-2.5 bg-neutral-950 border border-neutral-700 rounded text-neutral-200 focus:outline-none focus:border-amber-500"
+              >
+                <option value="dark">Dark Theme (Judicial Night)</option>
+                <option value="light">Light Theme (Judicial Day)</option>
+              </select>
             </div>
 
             <div>

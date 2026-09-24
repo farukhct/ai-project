@@ -46,7 +46,37 @@ export default function App() {
 
   // Active view
   const [currentView, setCurrentView] = useState<string>('dashboard');
-  const [isDark, setIsDark] = useState<boolean>(true);
+  const [isDark, setIsDark] = useState<boolean>(() => {
+    try {
+      const saved = localStorage.getItem('court_dairy_theme');
+      if (saved) return saved === 'dark';
+    } catch {
+      // ignore
+    }
+    return true;
+  });
+
+  // Sync DOM classes whenever isDark changes
+  useEffect(() => {
+    try {
+      localStorage.setItem('court_dairy_theme', isDark ? 'dark' : 'light');
+    } catch {
+      // ignore
+    }
+    const root = document.documentElement;
+    const body = document.body;
+    if (isDark) {
+      root.classList.add('dark');
+      root.classList.remove('light');
+      body.classList.add('dark');
+      body.classList.remove('light');
+    } else {
+      root.classList.add('light');
+      root.classList.remove('dark');
+      body.classList.add('light');
+      body.classList.remove('dark');
+    }
+  }, [isDark]);
 
   // Settings
   const [settings, setSettings] = useState<SystemSettings>({
@@ -183,7 +213,9 @@ export default function App() {
       const s = await api.getSettings();
       if (s && Object.keys(s).length > 0) {
         setSettings(prev => ({ ...prev, ...s }));
-        if (s.theme === 'light') setIsDark(false);
+        if (s.theme) {
+          setIsDark(s.theme === 'dark');
+        }
       }
     } catch (e) {
       console.warn(e);
@@ -296,12 +328,14 @@ export default function App() {
 
   // CRUD Handlers
   const handleSaveCase = async (caseData: Partial<CourtCase>) => {
+    const caseNum = caseData.CaseNumber || (caseData as any).caseNumber || '';
     if (caseData.ID) {
       await api.updateCase(caseData.ID, caseData);
-      addToast('success', `Case #${caseData.CaseNumber} updated successfully.`);
+      addToast('success', `Case #${caseNum} updated successfully.`);
     } else {
       await api.createCase(caseData);
-      addToast('success', `Case #${caseData.CaseNumber} saved successfully.`);
+      addToast('success', `Case #${caseNum} recorded in Court Dairy.`);
+      setCurrentView('case-list');
     }
     loadCases();
     loadDashboard();
@@ -337,6 +371,19 @@ export default function App() {
   const handleSaveSettings = async (newSettings: SystemSettings) => {
     await api.updateSettings(newSettings);
     setSettings(newSettings);
+    if (newSettings.theme) {
+      setIsDark(newSettings.theme === 'dark');
+    }
+    addToast('success', 'Court & system settings saved.');
+  };
+
+  const handleToggleTheme = () => {
+    const nextDark = !isDark;
+    setIsDark(nextDark);
+    const themeName = nextDark ? 'dark' : 'light';
+    setSettings(prev => ({ ...prev, theme: themeName }));
+    api.updateSettings({ ...settings, theme: themeName }).catch(console.warn);
+    addToast('info', `Switched to ${nextDark ? 'Dark Theme' : 'Light Theme'}`);
   };
 
   // Rendering conditional screens
@@ -381,7 +428,7 @@ export default function App() {
 
   // Main Desktop Application Shell
   return (
-    <div className={`h-screen flex flex-col overflow-hidden bg-neutral-950 text-neutral-100 ${isDark ? 'dark' : ''}`}>
+    <div className={`h-screen flex flex-col overflow-hidden bg-neutral-950 text-neutral-100 ${isDark ? 'dark' : 'light'}`}>
       {/* Desktop Window Title Bar */}
       <DesktopTitleBar appName={settings.appName} courtName={settings.courtName} />
 
@@ -436,7 +483,7 @@ export default function App() {
               });
             }}
             isDark={isDark}
-            onToggleTheme={() => setIsDark(!isDark)}
+            onToggleTheme={handleToggleTheme}
           />
 
           {/* Active View Container */}

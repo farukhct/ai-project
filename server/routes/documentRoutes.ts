@@ -9,7 +9,12 @@ router.post('/cases/:caseId/documents', requireAuth, async (req: AuthenticatedRe
   try {
     const db = await getDb();
     const caseId = parseInt(req.params.caseId, 10);
-    const { title, documentType, fileName, fileSize, mimeType, base64Data } = req.body;
+    const title = req.body.title ?? req.body.Title;
+    const documentType = req.body.documentType ?? req.body.DocumentType;
+    const fileName = req.body.fileName ?? req.body.FileName;
+    const fileSize = req.body.fileSize ?? req.body.FileSize;
+    const mimeType = req.body.mimeType ?? req.body.MimeType;
+    const base64Data = req.body.base64Data ?? req.body.Base64Data;
 
     if (!title || !fileName || !base64Data) {
       return res.status(400).json({ error: 'Title, file name, and file data are required.' });

@@ -10,7 +10,11 @@ router.post('/cases/:caseId/proceedings', requireAuth, async (req: Authenticated
   try {
     const db = await getDb();
     const caseId = parseInt(req.params.caseId, 10);
-    const { hearingDate, businessRecorded, nextHearingDate, benchNotes, updateResult } = req.body;
+    const hearingDate = req.body.hearingDate ?? req.body.HearingDate;
+    const businessRecorded = req.body.businessRecorded ?? req.body.BusinessRecorded;
+    const nextHearingDate = req.body.nextHearingDate ?? req.body.NextHearingDate;
+    const benchNotes = req.body.benchNotes ?? req.body.BenchNotes;
+    const updateResult = req.body.updateResult ?? req.body.UpdateResult;
 
     if (!hearingDate || !businessRecorded) {
       return res.status(400).json({ error: 'Hearing date and business recorded are required.' });

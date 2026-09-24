@@ -1,48 +1,162 @@
 /**
  * Court Dairy Date Utilities
- * Enforces DD-MM-YYYY display standard everywhere while maintaining YYYY-MM-DD SQLite standard.
+ * Supports customizable date formatting standards (DD-MM-YYYY, DD/MM/YYYY, YYYY-MM-DD, DD.MM.YYYY, DD MMM YYYY, MM/DD/YYYY)
+ * while maintaining YYYY-MM-DD SQLite standard internally.
  */
 
-export function toDisplayDate(isoOrDateStr?: string | null): string {
-  if (!isoOrDateStr) return '';
-  const trimmed = isoOrDateStr.trim();
-  // If already DD-MM-YYYY
-  if (/^\d{2}-\d{2}-\d{4}$/.test(trimmed)) {
-    return trimmed;
+export type DateFormatPattern =
+  | 'DD-MM-YYYY'
+  | 'DD/MM/YYYY'
+  | 'YYYY-MM-DD'
+  | 'DD.MM.YYYY'
+  | 'DD MMM YYYY'
+  | 'MM/DD/YYYY';
+
+export interface DateFormatOption {
+  id: DateFormatPattern;
+  label: string;
+  example: string;
+  separator: string;
+}
+
+export const DATE_FORMAT_OPTIONS: DateFormatOption[] = [
+  { id: 'DD-MM-YYYY', label: 'DD-MM-YYYY (Hyphenated)', example: '24-09-2026', separator: '-' },
+  { id: 'DD/MM/YYYY', label: 'DD/MM/YYYY (Slash)', example: '24/09/2026', separator: '/' },
+  { id: 'YYYY-MM-DD', label: 'YYYY-MM-DD (ISO Standard)', example: '2026-09-24', separator: '-' },
+  { id: 'DD.MM.YYYY', label: 'DD.MM.YYYY (Dot Separated)', example: '24.09.2026', separator: '.' },
+  { id: 'DD MMM YYYY', label: 'DD MMM YYYY (Judicial Text)', example: '24 Sep 2026', separator: ' ' },
+  { id: 'MM/DD/YYYY', label: 'MM/DD/YYYY (US Standard)', example: '09/24/2026', separator: '/' },
+];
+
+const MONTH_NAMES_SHORT = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+const MONTH_MAP: Record<string, string> = {
+  jan: '01', feb: '02', mar: '03', apr: '04', may: '05', jun: '06',
+  jul: '07', aug: '08', sep: '09', oct: '10', nov: '11', dec: '12',
+  january: '01', february: '02', march: '03', april: '04', june: '06',
+  july: '07', august: '08', september: '09', october: '10', november: '11', december: '12'
+};
+
+export function getStoredDateFormat(): DateFormatPattern {
+  try {
+    const saved = localStorage.getItem('court_dairy_date_format') as DateFormatPattern;
+    if (saved && DATE_FORMAT_OPTIONS.some(o => o.id === saved)) {
+      return saved;
+    }
+  } catch {
+    // ignore
   }
-  // If YYYY-MM-DD or ISO timestamp
+  return 'DD-MM-YYYY';
+}
+
+export function setStoredDateFormat(format: DateFormatPattern): void {
+  try {
+    localStorage.setItem('court_dairy_date_format', format);
+  } catch {
+    // ignore
+  }
+}
+
+/**
+ * Parse any date string into standard ISO YYYY-MM-DD
+ */
+export function toIsoDate(dateStr?: string | null): string {
+  if (!dateStr) return '';
+  const trimmed = dateStr.trim();
+  if (!trimmed) return '';
+
+  // 1. Textual month format: "24 Sep 2026" or "24 September 2026"
+  const textMonthMatch = trimmed.match(/^(\d{1,2})\s+([A-Za-z]+)\s+(\d{4})$/);
+  if (textMonthMatch) {
+    const day = textMonthMatch[1].padStart(2, '0');
+    const monStr = textMonthMatch[2].toLowerCase();
+    const mon = MONTH_MAP[monStr];
+    const year = textMonthMatch[3];
+    if (mon) return `${year}-${mon}-${day}`;
+  }
+
+  // 2. YYYY-MM-DD or YYYY/MM/DD or YYYY.MM.DD
+  const ymdMatch = trimmed.match(/^(\d{4})[-/.](\d{1,2})[-/.](\d{1,2})/);
+  if (ymdMatch) {
+    const year = ymdMatch[1];
+    const month = ymdMatch[2].padStart(2, '0');
+    const day = ymdMatch[3].padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  }
+
+  // 3. DD-MM-YYYY or DD/MM/YYYY or DD.MM.YYYY
+  const dmyMatch = trimmed.match(/^(\d{1,2})[-/.](\d{1,2})[-/.](\d{4})$/);
+  if (dmyMatch) {
+    const day = dmyMatch[1].padStart(2, '0');
+    const month = dmyMatch[2].padStart(2, '0');
+    const year = dmyMatch[3];
+    return `${year}-${month}-${day}`;
+  }
+
+  // 4. ISO Date time string (2026-09-24T12:00:00Z)
   if (/^\d{4}-\d{2}-\d{2}/.test(trimmed)) {
-    const parts = trimmed.substring(0, 10).split('-');
-    return `${parts[2]}-${parts[1]}-${parts[0]}`;
+    return trimmed.substring(0, 10);
   }
+
+  // 5. Native date parser fallback
+  const d = new Date(trimmed);
+  if (!isNaN(d.getTime())) {
+    const year = d.getFullYear();
+    const month = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  }
+
   return trimmed;
 }
 
-export function toIsoDate(displayDateStr?: string | null): string {
-  if (!displayDateStr) return '';
-  const trimmed = displayDateStr.trim();
-  // If DD-MM-YYYY
-  if (/^\d{2}-\d{2}-\d{4}$/.test(trimmed)) {
-    const [d, m, y] = trimmed.split('-');
-    return `${y}-${m}-${d}`;
+/**
+ * Format an ISO date or date string according to a selected format pattern
+ */
+export function formatDateByPattern(isoOrDateStr?: string | null, pattern: DateFormatPattern = 'DD-MM-YYYY'): string {
+  if (!isoOrDateStr) return '';
+  const iso = toIsoDate(isoOrDateStr);
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(iso)) return isoOrDateStr;
+
+  const [y, m, d] = iso.split('-');
+  const monthIdx = parseInt(m, 10) - 1;
+  const monthShort = MONTH_NAMES_SHORT[monthIdx] || m;
+
+  switch (pattern) {
+    case 'DD-MM-YYYY':
+      return `${d}-${m}-${y}`;
+    case 'DD/MM/YYYY':
+      return `${d}/${m}/${y}`;
+    case 'YYYY-MM-DD':
+      return `${y}-${m}-${d}`;
+    case 'DD.MM.YYYY':
+      return `${d}.${m}.${y}`;
+    case 'DD MMM YYYY':
+      return `${d} ${monthShort} ${y}`;
+    case 'MM/DD/YYYY':
+      return `${m}/${d}/${y}`;
+    default:
+      return `${d}-${m}-${y}`;
   }
-  // If already YYYY-MM-DD
-  if (/^\d{4}-\d{2}-\d{2}$/.test(trimmed)) {
-    return trimmed;
-  }
-  return trimmed;
 }
 
-export function getTodayDisplay(): string {
-  const d = new Date();
-  const day = String(d.getDate()).padStart(2, '0');
-  const month = String(d.getMonth() + 1).padStart(2, '0');
-  const year = d.getFullYear();
-  return `${day}-${month}-${year}`;
+/**
+ * Legacy compatibility toDisplayDate
+ */
+export function toDisplayDate(isoOrDateStr?: string | null): string {
+  const pattern = getStoredDateFormat();
+  return formatDateByPattern(isoOrDateStr, pattern);
+}
+
+export function getTodayDisplay(pattern: DateFormatPattern = 'DD-MM-YYYY'): string {
+  return formatDateByPattern(getTodayIso(), pattern);
 }
 
 export function getTodayIso(): string {
-  return new Date().toISOString().split('T')[0];
+  const d = new Date();
+  const year = d.getFullYear();
+  const month = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
 }
 
 export function formatDateTime(isoStr?: string | null): string {

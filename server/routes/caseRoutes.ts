@@ -4,19 +4,49 @@ import { requireAuth, AuthenticatedRequest } from '../auth.js';
 
 const router = Router();
 
-// Convert DD-MM-YYYY to YYYY-MM-DD if needed
+// Convert any supported date format to YYYY-MM-DD
+const MONTH_MAP_SERVER: Record<string, string> = {
+  jan: '01', feb: '02', mar: '03', apr: '04', may: '05', jun: '06',
+  jul: '07', aug: '08', sep: '09', oct: '10', nov: '11', dec: '12',
+  january: '01', february: '02', march: '03', april: '04', june: '06',
+  july: '07', august: '08', september: '09', october: '10', november: '11', december: '12'
+};
+
 export function toIsoDate(dateStr: string): string {
   if (!dateStr) return '';
   const trimmed = dateStr.trim();
-  // If in DD-MM-YYYY format
-  if (/^\d{2}-\d{2}-\d{4}$/.test(trimmed)) {
-    const [d, m, y] = trimmed.split('-');
-    return `${y}-${m}-${d}`;
+
+  // 1. Textual month format: "24 Sep 2026" or "24 September 2026"
+  const textMonthMatch = trimmed.match(/^(\d{1,2})\s+([A-Za-z]+)\s+(\d{4})$/);
+  if (textMonthMatch) {
+    const day = textMonthMatch[1].padStart(2, '0');
+    const monStr = textMonthMatch[2].toLowerCase();
+    const mon = MONTH_MAP_SERVER[monStr];
+    const year = textMonthMatch[3];
+    if (mon) return `${year}-${mon}-${day}`;
   }
-  // If already YYYY-MM-DD
-  if (/^\d{4}-\d{2}-\d{2}$/.test(trimmed)) {
-    return trimmed;
+
+  // 2. If in DD-MM-YYYY, DD/MM/YYYY, or DD.MM.YYYY
+  if (/^\d{1,2}[-/.]\d{1,2}[-/.]\d{4}$/.test(trimmed)) {
+    const [d, m, y] = trimmed.split(/[-/.]/);
+    return `${y}-${m.padStart(2, '0')}-${d.padStart(2, '0')}`;
   }
+
+  // 3. If in YYYY-MM-DD, YYYY/MM/DD, or YYYY.MM.DD
+  if (/^\d{4}[-/.]\d{1,2}[-/.]\d{1,2}/.test(trimmed)) {
+    const [y, m, d] = trimmed.substring(0, 10).split(/[-/.]/);
+    return `${y}-${m.padStart(2, '0')}-${d.padStart(2, '0')}`;
+  }
+
+  // 4. Fallback native parse
+  const d = new Date(trimmed);
+  if (!isNaN(d.getTime())) {
+    const year = d.getFullYear();
+    const month = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  }
+
   return trimmed;
 }
 
@@ -30,6 +60,43 @@ export function toDisplayDate(dateStr: string): string {
   }
   return trimmed;
 }
+
+// Check if case number exists
+router.get('/cases/check-casenumber', requireAuth, async (req, res) => {
+  try {
+    const db = await getDb();
+    const caseNumber = String(req.query.caseNumber || req.query.CaseNumber || '').trim();
+    const excludeId = req.query.excludeId ? parseInt(String(req.query.excludeId), 10) : null;
+
+    if (!caseNumber) {
+      return res.json({ exists: false, match: null });
+    }
+
+    let sql = 'SELECT ID, SerialNo, CaseNumber, CaseDate, DairyDate, Result FROM CourtDiary WHERE LOWER(TRIM(CaseNumber)) = LOWER(TRIM(?))';
+    const params: any[] = [caseNumber];
+    if (excludeId && !isNaN(excludeId)) {
+      sql += ' AND ID != ?';
+      params.push(excludeId);
+    }
+    sql += ' LIMIT 1;';
+
+    const match = queryRow<any>(db, sql, params);
+    if (match) {
+      res.json({
+        exists: true,
+        match: {
+          ...match,
+          DisplayCaseDate: toDisplayDate(match.CaseDate),
+          DisplayDairyDate: toDisplayDate(match.DairyDate)
+        }
+      });
+    } else {
+      res.json({ exists: false, match: null });
+    }
+  } catch (err: any) {
+    res.status(500).json({ error: err.message || 'Error checking case number' });
+  }
+});
 
 // Get next available serial number
 router.get('/cases/next-serial', requireAuth, async (req, res) => {
@@ -46,23 +113,22 @@ router.get('/cases/next-serial', requireAuth, async (req, res) => {
 router.get('/cases', requireAuth, async (req, res) => {
   try {
     const db = await getDb();
-    const {
-      page = '1',
-      limit = '25',
-      search = '',
-      sortBy = 'SerialNo',
-      sortOrder = 'ASC',
-      caseDateFrom = '',
-      caseDateTo = '',
-      dairyDateFrom = '',
-      dairyDateTo = '',
-      result = '',
-      serialFrom = '',
-      serialTo = '',
-      caseNumber = '',
-      description = '',
-      remarks = ''
-    } = req.query as Record<string, string>;
+    const q = req.query as Record<string, string>;
+    const page = q.page || '1';
+    const limit = q.limit || '25';
+    const search = q.search || '';
+    const sortBy = q.sortBy || q.SortBy || 'SerialNo';
+    const sortOrder = q.sortOrder || q.SortOrder || 'ASC';
+    const caseDateFrom = q.caseDateFrom || q.CaseDateFrom || '';
+    const caseDateTo = q.caseDateTo || q.CaseDateTo || '';
+    const dairyDateFrom = q.dairyDateFrom || q.DairyDateFrom || '';
+    const dairyDateTo = q.dairyDateTo || q.DairyDateTo || '';
+    const result = q.result || q.Result || '';
+    const serialFrom = q.serialFrom || q.SerialFrom || '';
+    const serialTo = q.serialTo || q.SerialTo || '';
+    const caseNumber = q.caseNumber || q.CaseNumber || q['case-number'] || '';
+    const description = q.description || q.Description || '';
+    const remarks = q.remarks || q.Remarks || '';
 
     const pageNum = Math.max(1, parseInt(page, 10) || 1);
     const limitNum = Math.min(500, Math.max(1, parseInt(limit, 10) || 25));
@@ -214,36 +280,38 @@ router.get('/cases/:id', requireAuth, async (req, res) => {
 router.post('/cases', requireAuth, async (req: AuthenticatedRequest, res: Response) => {
   try {
     const db = await getDb();
-    const {
-      serialNo,
-      caseDate,
-      caseNumber,
-      result = 'Pending',
-      dairyDate,
-      description = '',
-      remarks = ''
-    } = req.body;
+    const rawCaseNumber = req.body.caseNumber ?? req.body.CaseNumber ?? req.body['Case Number'] ?? '';
+    const rawCaseDate = req.body.caseDate ?? req.body.CaseDate ?? req.body['Case Date'] ?? '';
+    const rawDairyDate = req.body.dairyDate ?? req.body.DairyDate ?? req.body['Dairy Date'] ?? '';
+    const rawSerial = req.body.serialNo ?? req.body.SerialNo ?? req.body['Serial No'];
+    const rawResult = req.body.result ?? req.body.Result ?? 'Pending';
+    const rawDescription = req.body.description ?? req.body.Description ?? '';
+    const rawRemarks = req.body.remarks ?? req.body.Remarks ?? '';
+
+    const caseNumber = String(rawCaseNumber).trim();
+    const caseDateStr = String(rawCaseDate).trim();
+    const dairyDateStr = String(rawDairyDate).trim();
 
     // Validations
-    if (!caseNumber || !caseNumber.trim()) {
+    if (!caseNumber) {
       return res.status(400).json({ error: 'Case Number is required.' });
     }
-    if (!caseDate || !caseDate.trim()) {
+    if (!caseDateStr) {
       return res.status(400).json({ error: 'Case Date is required.' });
     }
-    if (!dairyDate || !dairyDate.trim()) {
+    if (!dairyDateStr) {
       return res.status(400).json({ error: 'Dairy Date is required.' });
     }
 
-    const isoCaseDate = toIsoDate(caseDate);
-    const isoDairyDate = toIsoDate(dairyDate);
+    const isoCaseDate = toIsoDate(caseDateStr);
+    const isoDairyDate = toIsoDate(dairyDateStr);
 
     if (!isoCaseDate || !isoDairyDate) {
-      return res.status(400).json({ error: 'Invalid date format. Expected DD-MM-YYYY.' });
+      return res.status(400).json({ error: 'Invalid date format. Expected DD-MM-YYYY or YYYY-MM-DD.' });
     }
 
     // Determine SerialNo (or validate supplied)
-    let finalSerial = parseInt(serialNo, 10);
+    let finalSerial = parseInt(String(rawSerial), 10);
     if (!finalSerial || isNaN(finalSerial)) {
       const maxSerial = queryScalar(db, 'SELECT COALESCE(MAX(SerialNo), 0) FROM CourtDiary;') as number;
       finalSerial = maxSerial + 1;
@@ -255,6 +323,9 @@ router.post('/cases', requireAuth, async (req: AuthenticatedRequest, res: Respon
       }
     }
 
+    const result = String(rawResult).trim() || 'Pending';
+    const description = String(rawDescription).trim();
+    const remarks = String(rawRemarks).trim();
     const now = new Date().toISOString();
     const createdBy = req.user?.fullName || req.user?.username || 'Officer';
 
@@ -266,11 +337,11 @@ router.post('/cases', requireAuth, async (req: AuthenticatedRequest, res: Respon
         [
           finalSerial,
           isoCaseDate,
-          caseNumber.trim(),
-          result.trim() || 'Pending',
+          caseNumber,
+          result,
           isoDairyDate,
-          description ? description.trim() : '',
-          remarks ? remarks.trim() : '',
+          description,
+          remarks,
           now,
           now,
           createdBy,
@@ -280,7 +351,7 @@ router.post('/cases', requireAuth, async (req: AuthenticatedRequest, res: Respon
     });
 
     const newId = queryScalar(db, 'SELECT last_insert_rowid();') as number;
-    logAudit(db, 'CREATE_CASE', 'CourtDiary', String(newId), `Created case #${caseNumber.trim()} (Serial ${finalSerial})`, createdBy);
+    logAudit(db, 'CREATE_CASE', 'CourtDiary', String(newId), `Created case #${caseNumber} (Serial ${finalSerial})`, createdBy);
 
     res.status(201).json({
       message: 'Case saved successfully.',
@@ -303,28 +374,27 @@ router.put('/cases/:id', requireAuth, async (req: AuthenticatedRequest, res: Res
       return res.status(404).json({ error: 'Case not found' });
     }
 
-    const {
-      serialNo,
-      caseDate,
-      caseNumber,
-      result,
-      dairyDate,
-      description,
-      remarks
-    } = req.body;
+    const rawCaseNumber = req.body.caseNumber ?? req.body.CaseNumber ?? req.body['Case Number'] ?? existing.CaseNumber;
+    const rawCaseDate = req.body.caseDate ?? req.body.CaseDate ?? req.body['Case Date'] ?? existing.CaseDate;
+    const rawDairyDate = req.body.dairyDate ?? req.body.DairyDate ?? req.body['Dairy Date'] ?? existing.DairyDate;
+    const rawSerial = req.body.serialNo ?? req.body.SerialNo ?? req.body['Serial No'];
+    const rawResult = req.body.result ?? req.body.Result ?? existing.Result;
+    const rawDescription = req.body.description ?? req.body.Description ?? existing.Description;
+    const rawRemarks = req.body.remarks ?? req.body.Remarks ?? existing.Remarks;
 
-    if (!caseNumber || !caseNumber.trim()) {
+    const caseNumber = String(rawCaseNumber).trim();
+    if (!caseNumber) {
       return res.status(400).json({ error: 'Case Number is required.' });
     }
 
-    const isoCaseDate = toIsoDate(caseDate);
-    const isoDairyDate = toIsoDate(dairyDate);
+    const isoCaseDate = toIsoDate(String(rawCaseDate).trim());
+    const isoDairyDate = toIsoDate(String(rawDairyDate).trim());
 
     if (!isoCaseDate || !isoDairyDate) {
       return res.status(400).json({ error: 'Invalid date format.' });
     }
 
-    const finalSerial = parseInt(serialNo, 10) || existing.SerialNo;
+    const finalSerial = parseInt(String(rawSerial), 10) || existing.SerialNo;
     if (finalSerial !== existing.SerialNo) {
       const duplicate = queryRow(db, 'SELECT ID FROM CourtDiary WHERE SerialNo = ? AND ID != ?;', [finalSerial, caseId]);
       if (duplicate) {
@@ -332,6 +402,9 @@ router.put('/cases/:id', requireAuth, async (req: AuthenticatedRequest, res: Res
       }
     }
 
+    const result = String(rawResult).trim() || existing.Result;
+    const description = rawDescription !== undefined ? String(rawDescription).trim() : existing.Description;
+    const remarks = rawRemarks !== undefined ? String(rawRemarks).trim() : existing.Remarks;
     const now = new Date().toISOString();
     const updatedBy = req.user?.fullName || req.user?.username || 'Officer';
 
@@ -351,11 +424,11 @@ router.put('/cases/:id', requireAuth, async (req: AuthenticatedRequest, res: Res
         [
           finalSerial,
           isoCaseDate,
-          caseNumber.trim(),
-          result ? result.trim() : existing.Result,
+          caseNumber,
+          result,
           isoDairyDate,
-          description !== undefined ? description.trim() : existing.Description,
-          remarks !== undefined ? remarks.trim() : existing.Remarks,
+          description,
+          remarks,
           now,
           updatedBy,
           caseId
@@ -363,7 +436,7 @@ router.put('/cases/:id', requireAuth, async (req: AuthenticatedRequest, res: Res
       );
     });
 
-    logAudit(db, 'UPDATE_CASE', 'CourtDiary', String(caseId), `Updated case #${caseNumber.trim()}`, updatedBy);
+    logAudit(db, 'UPDATE_CASE', 'CourtDiary', String(caseId), `Updated case #${caseNumber}`, updatedBy);
 
     res.json({ message: 'Case updated successfully.' });
   } catch (err: any) {

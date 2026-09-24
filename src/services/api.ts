@@ -128,17 +128,43 @@ export const api = {
     return request(`/api/cases/${id}`);
   },
 
+  async checkCaseNumber(caseNumber: string, excludeId?: number | null): Promise<{ exists: boolean; match: CourtCase | null }> {
+    const params = new URLSearchParams({ caseNumber });
+    if (excludeId) params.append('excludeId', String(excludeId));
+    return request(`/api/cases/check-casenumber?${params.toString()}`);
+  },
+
   async createCase(payload: Partial<CourtCase>): Promise<{ caseId: number; serialNo: number; message: string }> {
+    const body = {
+      ...payload,
+      caseNumber: payload.CaseNumber || (payload as any).caseNumber,
+      caseDate: payload.CaseDate || (payload as any).caseDate,
+      dairyDate: payload.DairyDate || (payload as any).dairyDate,
+      serialNo: payload.SerialNo || (payload as any).serialNo,
+      result: payload.Result || (payload as any).result,
+      description: payload.Description || (payload as any).description,
+      remarks: payload.Remarks || (payload as any).remarks,
+    };
     return request('/api/cases', {
       method: 'POST',
-      body: JSON.stringify(payload),
+      body: JSON.stringify(body),
     });
   },
 
   async updateCase(id: number, payload: Partial<CourtCase>): Promise<{ message: string }> {
+    const body = {
+      ...payload,
+      caseNumber: payload.CaseNumber || (payload as any).caseNumber,
+      caseDate: payload.CaseDate || (payload as any).caseDate,
+      dairyDate: payload.DairyDate || (payload as any).dairyDate,
+      serialNo: payload.SerialNo || (payload as any).serialNo,
+      result: payload.Result || (payload as any).result,
+      description: payload.Description || (payload as any).description,
+      remarks: payload.Remarks || (payload as any).remarks,
+    };
     return request(`/api/cases/${id}`, {
       method: 'PUT',
-      body: JSON.stringify(payload),
+      body: JSON.stringify(body),
     });
   },
 
