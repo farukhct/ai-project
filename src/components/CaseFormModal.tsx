@@ -401,7 +401,7 @@ export const CaseFormModal: React.FC<Props> = ({
                   type="text"
                   value={caseNumber}
                   onChange={(e) => setCaseNumber(e.target.value)}
-                  placeholder="e.g. CR-104/2026, BA-45/2026, CP-12/2025"
+                  placeholder="e.g. CR-104/2026, WP-202/2026, CrlM-45/2026"
                   required
                   className="w-full h-8.5 px-3 bg-neutral-950 border border-neutral-700 rounded text-neutral-100 font-semibold text-xs focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500"
                 />
@@ -415,22 +415,29 @@ export const CaseFormModal: React.FC<Props> = ({
               {/* Quick Case Prefix Chips */}
               <div className="flex items-center gap-1 mt-1.5 flex-wrap">
                 <span className="text-[10px] text-neutral-500">Quick prefix:</span>
-                {['CR-', 'BA-', 'CP-', 'OS-', 'WP-', 'CA-'].map((p) => (
-                  <button
-                    key={p}
-                    type="button"
-                    onClick={() => {
-                      const trimmed = caseNumber.trim();
-                      if (!trimmed.toUpperCase().startsWith(p)) {
-                        setCaseNumber(p + trimmed.replace(/^[A-Za-z.-]+[-/]?/, ''));
-                      }
-                      caseNumberInputRef.current?.focus();
-                    }}
-                    className="px-1.5 py-0.5 rounded bg-neutral-800 hover:bg-neutral-700 text-[10px] text-neutral-300 font-mono border border-neutral-700/60 cursor-pointer"
-                  >
-                    {p}
-                  </button>
-                ))}
+                {['CR-', 'WP-', 'CrlM-', 'CP-', 'CA-', 'BA-', 'OS-'].map((p) => {
+                  const isCurrent = caseNumber.trim().toUpperCase().startsWith(p.toUpperCase());
+                  return (
+                    <button
+                      key={p}
+                      type="button"
+                      onClick={() => {
+                        const trimmed = caseNumber.trim();
+                        if (!trimmed.toUpperCase().startsWith(p.toUpperCase())) {
+                          setCaseNumber(p + trimmed.replace(/^[A-Za-z.-]+[-/]?/, ''));
+                        }
+                        caseNumberInputRef.current?.focus();
+                      }}
+                      className={`px-1.5 py-0.5 rounded text-[10px] font-mono border transition-colors cursor-pointer ${
+                        isCurrent
+                          ? 'bg-amber-600/30 text-amber-300 border-amber-600/60 font-semibold'
+                          : 'bg-neutral-800 hover:bg-neutral-700 text-neutral-300 border-neutral-700/60'
+                      }`}
+                    >
+                      {p}
+                    </button>
+                  );
+                })}
               </div>
 
               {/* Duplicate Notice Banner */}
