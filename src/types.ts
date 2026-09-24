@@ -6,6 +6,13 @@ export interface User {
   isActive?: number;
   createdDate?: string;
   lastLogin?: string;
+  UserID?: number;
+  Username?: string;
+  FullName?: string;
+  Role?: 'Administrator' | 'User';
+  IsActive?: number;
+  CreatedDate?: string;
+  LastLogin?: string;
 }
 
 export interface CourtCase {

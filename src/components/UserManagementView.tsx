@@ -85,9 +85,13 @@ export const UserManagementView: React.FC<Props> = ({ currentUser, onToast }) =>
 
   const handleToggleActive = async (u: User) => {
     try {
-      const nextActive = u.isActive === 1 ? 0 : 1;
-      await api.updateUser(u.userId, { isActive: nextActive });
-      onToast('success', `User ${u.username} ${nextActive ? 'activated' : 'deactivated'}.`);
+      const uId = u.userId ?? u.UserID;
+      if (uId === undefined) return;
+      const currentActive = (u.isActive !== undefined ? u.isActive : u.IsActive) ?? 1;
+      const nextActive = currentActive === 1 ? 0 : 1;
+      const username = u.username || u.Username || 'User';
+      await api.updateUser(uId, { isActive: nextActive });
+      onToast('success', `User ${username} ${nextActive ? 'activated' : 'deactivated'}.`);
       loadUsers();
     } catch (err: any) {
       onToast('error', err.message || 'Failed to update user status');
@@ -95,10 +99,13 @@ export const UserManagementView: React.FC<Props> = ({ currentUser, onToast }) =>
   };
 
   const handleDeleteUser = async (u: User) => {
-    if (!confirm(`Are you sure you want to permanently delete user account "${u.username}"?`)) return;
+    const uId = u.userId ?? u.UserID;
+    if (uId === undefined) return;
+    const username = u.username || u.Username || 'user';
+    if (!confirm(`Are you sure you want to permanently delete user account "${username}"?`)) return;
     try {
-      await api.deleteUser(u.userId);
-      onToast('success', `User account "${u.username}" deleted.`);
+      await api.deleteUser(uId);
+      onToast('success', `User account "${username}" deleted.`);
       loadUsers();
     } catch (err: any) {
       onToast('error', err.message || 'Failed to delete user');
@@ -210,21 +217,28 @@ export const UserManagementView: React.FC<Props> = ({ currentUser, onToast }) =>
         </div>
 
         <div className="divide-y divide-neutral-800/60 text-xs">
-          {users.map((u) => {
-            const isSelf = currentUser?.userId === u.userId;
-            const isChangingPass = changingPassUserId === u.userId;
+          {users.map((u, index) => {
+            const uId = u.userId ?? u.UserID ?? index + 1;
+            const uUsername = u.username || u.Username || 'user';
+            const uFullName = u.fullName || u.FullName || uUsername;
+            const uRole = u.role || u.Role || 'User';
+            const uIsActive = (u.isActive !== undefined ? u.isActive : u.IsActive) ?? 1;
+
+            const currentUserId = currentUser?.userId ?? currentUser?.UserID;
+            const isSelf = currentUserId !== undefined && currentUserId === uId;
+            const isChangingPass = changingPassUserId === uId;
 
             return (
-              <div key={u.userId} className="p-4 hover:bg-neutral-800/30 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <div key={`user-${uId}-${uUsername}`} className="p-4 hover:bg-neutral-800/30 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                 <div className="flex items-center gap-3">
-                  <div className={`p-2 rounded-full border ${u.role === 'Administrator' ? 'bg-amber-950/60 border-amber-800 text-amber-400' : 'bg-neutral-800 border-neutral-700 text-neutral-400'}`}>
-                    {u.role === 'Administrator' ? <Shield className="w-4 h-4" /> : <UserIcon className="w-4 h-4" />}
+                  <div className={`p-2 rounded-full border ${uRole === 'Administrator' ? 'bg-amber-950/60 border-amber-800 text-amber-400' : 'bg-neutral-800 border-neutral-700 text-neutral-400'}`}>
+                    {uRole === 'Administrator' ? <Shield className="w-4 h-4" /> : <UserIcon className="w-4 h-4" />}
                   </div>
 
                   <div>
                     <div className="flex items-center gap-2">
-                      <span className="font-semibold text-neutral-200">{u.fullName}</span>
-                      <span className="text-neutral-400 font-mono">(@{u.username})</span>
+                      <span className="font-semibold text-neutral-200">{uFullName}</span>
+                      <span className="text-neutral-400 font-mono">(@{uUsername})</span>
                       {isSelf && (
                         <span className="text-[10px] bg-sky-950 text-sky-400 border border-sky-800 px-1.5 py-0.2 rounded">
                           You
@@ -232,12 +246,12 @@ export const UserManagementView: React.FC<Props> = ({ currentUser, onToast }) =>
                       )}
                     </div>
                     <div className="text-[11px] text-neutral-400 flex items-center gap-2 mt-0.5">
-                      <span className={u.role === 'Administrator' ? 'text-amber-400 font-medium' : ''}>
-                        {u.role}
+                      <span className={uRole === 'Administrator' ? 'text-amber-400 font-medium' : ''}>
+                        {uRole}
                       </span>
                       <span>·</span>
-                      <span className={u.isActive === 1 ? 'text-emerald-400' : 'text-rose-400'}>
-                        {u.isActive === 1 ? 'Active' : 'Deactivated'}
+                      <span className={uIsActive === 1 ? 'text-emerald-400' : 'text-rose-400'}>
+                        {uIsActive === 1 ? 'Active' : 'Deactivated'}
                       </span>
                     </div>
                   </div>
@@ -254,7 +268,7 @@ export const UserManagementView: React.FC<Props> = ({ currentUser, onToast }) =>
                       autoFocus
                     />
                     <button
-                      onClick={() => handleUpdatePassword(u.userId)}
+                      onClick={() => handleUpdatePassword(Number(uId))}
                       className="px-2 py-1 bg-amber-600 text-neutral-950 font-semibold rounded text-xs hover:bg-amber-500"
                     >
                       Save
@@ -272,7 +286,7 @@ export const UserManagementView: React.FC<Props> = ({ currentUser, onToast }) =>
                 ) : (
                   <div className="flex items-center gap-2">
                     <button
-                      onClick={() => setChangingPassUserId(u.userId)}
+                      onClick={() => setChangingPassUserId(Number(uId))}
                       className="flex items-center gap-1 px-2.5 py-1 bg-neutral-800 hover:bg-neutral-700 text-neutral-300 rounded text-xs border border-neutral-700 transition-colors"
                     >
                       <Key className="w-3.5 h-3.5" />
@@ -284,12 +298,12 @@ export const UserManagementView: React.FC<Props> = ({ currentUser, onToast }) =>
                         <button
                           onClick={() => handleToggleActive(u)}
                           className={`px-2 py-1 rounded text-xs border transition-colors ${
-                            u.isActive === 1
+                            uIsActive === 1
                               ? 'bg-neutral-800 hover:bg-neutral-700 text-neutral-400 border-neutral-700'
                               : 'bg-emerald-950 text-emerald-400 border-emerald-800'
                           }`}
                         >
-                          {u.isActive === 1 ? 'Deactivate' : 'Activate'}
+                          {uIsActive === 1 ? 'Deactivate' : 'Activate'}
                         </button>
 
                         <button

@@ -8,11 +8,25 @@ const router = Router();
 router.get('/users', requireAuth, requireAdmin, async (req, res) => {
   try {
     const db = await getDb();
-    const rows = queryRows(
+    const rows = queryRows<any>(
       db,
       'SELECT UserID, Username, FullName, Role, IsActive, CreatedDate, LastLogin FROM Users ORDER BY UserID ASC;'
     );
-    res.json(rows);
+    const users = rows.map((r) => ({
+      userId: r.UserID,
+      username: r.Username,
+      fullName: r.FullName,
+      role: r.Role,
+      isActive: r.IsActive,
+      createdDate: r.CreatedDate,
+      lastLogin: r.LastLogin,
+      UserID: r.UserID,
+      Username: r.Username,
+      FullName: r.FullName,
+      Role: r.Role,
+      IsActive: r.IsActive
+    }));
+    res.json(users);
   } catch (err: any) {
     res.status(500).json({ error: err.message || 'Failed to fetch users' });
   }
