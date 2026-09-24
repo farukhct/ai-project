@@ -1,0 +1,6 @@
+{
+  "name": "Court Dairy",
+  "description": "Professional offline Court Case Diary & Management System for bench officers and court administrators.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
