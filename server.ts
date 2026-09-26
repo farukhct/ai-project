@@ -1,17 +1,47 @@
-import express from 'express';
-import path from 'path';
-import fs from 'fs';
-import { fileURLToPath } from 'url';
-import authRoutes from './server/routes/authRoutes.js';
-import caseRoutes from './server/routes/caseRoutes.js';
-import dashboardRoutes from './server/routes/dashboardRoutes.js';
-import proceedingRoutes from './server/routes/proceedingRoutes.js';
-import documentRoutes from './server/routes/documentRoutes.js';
-import resultRoutes from './server/routes/resultRoutes.js';
-import userRoutes from './server/routes/userRoutes.js';
-import settingRoutes from './server/routes/settingRoutes.js';
-import backupRoutes from './server/routes/backupRoutes.js';
-import { getDb } from './server/db.js';
+import { spawn } from 'node:child_process';
+import path from 'node:path';
+import fs from 'node:fs';
+import { fileURLToPath } from 'node:url';
+
+// If started with plain `node server.ts`, auto-bootstrap using `--import tsx`
+const isTsxActive = process.execArgv.some(arg => arg.includes('tsx')) || process.env.TSX_ACTIVE === '1';
+
+if (!isTsxActive) {
+  const child = spawn(process.execPath, ['--import', 'tsx', ...process.argv.slice(1)], {
+    stdio: 'inherit',
+    env: { ...process.env, TSX_ACTIVE: '1' }
+  });
+  child.on('exit', (code) => process.exit(code ?? 0));
+  // Wait indefinitely while child runs
+  await new Promise(() => {});
+}
+
+// Dynamically import dependencies once tsx is active
+const [
+  { default: express },
+  { default: authRoutes },
+  { default: caseRoutes },
+  { default: dashboardRoutes },
+  { default: proceedingRoutes },
+  { default: documentRoutes },
+  { default: resultRoutes },
+  { default: userRoutes },
+  { default: settingRoutes },
+  { default: backupRoutes },
+  { getDb }
+] = await Promise.all([
+  import('express'),
+  import('./server/routes/authRoutes.js'),
+  import('./server/routes/caseRoutes.js'),
+  import('./server/routes/dashboardRoutes.js'),
+  import('./server/routes/proceedingRoutes.js'),
+  import('./server/routes/documentRoutes.js'),
+  import('./server/routes/resultRoutes.js'),
+  import('./server/routes/userRoutes.js'),
+  import('./server/routes/settingRoutes.js'),
+  import('./server/routes/backupRoutes.js'),
+  import('./server/db.js')
+]);
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
