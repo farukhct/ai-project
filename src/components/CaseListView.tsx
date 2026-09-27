@@ -108,7 +108,7 @@ export const CaseListView: React.FC<Props> = ({
     if (['disposed', 'allowed'].includes(r)) return 'text-emerald-300 bg-emerald-950/70 border-emerald-800/80';
     if (['dismissed', 'withdrawn'].includes(r)) return 'text-rose-300 bg-rose-950/70 border-rose-800/80';
     if (r === 'adjourned') return 'text-sky-300 bg-sky-950/70 border-sky-800/80';
-    if (r === 'reserved') return 'text-purple-300 bg-purple-950/70 border-purple-800/80';
+    if (['reserved', 'for judgement', 'for judgment'].includes(r)) return 'text-purple-300 bg-purple-950/70 border-purple-800/80';
     return 'text-neutral-300 bg-neutral-800 border-neutral-700';
   };
 
@@ -178,6 +178,7 @@ export const CaseListView: React.FC<Props> = ({
             <option value="Allowed">Allowed</option>
             <option value="Dismissed">Dismissed</option>
             <option value="Reserved">Reserved</option>
+            <option value="For Judgement">For Judgement</option>
             <option value="Withdrawn">Withdrawn</option>
           </select>
 

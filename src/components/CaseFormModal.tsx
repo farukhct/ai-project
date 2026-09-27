@@ -472,15 +472,21 @@ export const CaseFormModal: React.FC<Props> = ({
                     <option value="Allowed">Allowed</option>
                     <option value="Dismissed">Dismissed</option>
                     <option value="Reserved">Reserved</option>
+                    <option value="For Judgement">For Judgement</option>
                     <option value="Withdrawn">Withdrawn</option>
                     <option value="Other">Other</option>
                   </>
                 ) : (
-                  resultsList.map((r) => (
-                    <option key={r.ResultID} value={r.ResultName}>
-                      {r.ResultName}
-                    </option>
-                  ))
+                  <>
+                    {resultsList.map((r) => (
+                      <option key={r.ResultID} value={r.ResultName}>
+                        {r.ResultName}
+                      </option>
+                    ))}
+                    {!resultsList.some((r) => r.ResultName.toLowerCase() === 'for judgement') && (
+                      <option value="For Judgement">For Judgement</option>
+                    )}
+                  </>
                 )}
               </select>
               <span className="text-[10px] text-neutral-500 mt-0.5 block">

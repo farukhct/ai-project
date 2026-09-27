@@ -55,7 +55,7 @@ export const DashboardView: React.FC<Props> = ({
     if (['disposed', 'allowed'].includes(r)) return 'text-emerald-400 bg-emerald-950/60 border-emerald-800/60';
     if (['dismissed', 'withdrawn'].includes(r)) return 'text-rose-400 bg-rose-950/60 border-rose-800/60';
     if (r === 'adjourned') return 'text-sky-400 bg-sky-950/60 border-sky-800/60';
-    if (r === 'reserved') return 'text-purple-400 bg-purple-950/60 border-purple-800/60';
+    if (['reserved', 'for judgement', 'for judgment'].includes(r)) return 'text-purple-400 bg-purple-950/60 border-purple-800/60';
     return 'text-neutral-400 bg-neutral-800 border-neutral-700';
   };
 

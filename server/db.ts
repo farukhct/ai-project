@@ -186,12 +186,24 @@ function initSchema(db: Database) {
       'Allowed',
       'Dismissed',
       'Reserved',
+      'For Judgement',
       'Withdrawn',
       'Other'
     ];
     const now = new Date().toISOString();
     for (const res of defaultResults) {
       db.run('INSERT INTO Results (ResultName, IsActive, CreatedDate) VALUES (?, 1, ?);', [res, now]);
+    }
+  } else {
+    // Ensure 'For Judgement' status option exists for existing databases
+    const forJudgementExists = queryScalar(
+      db,
+      'SELECT COUNT(*) FROM Results WHERE LOWER(ResultName) = LOWER(?);',
+      ['For Judgement']
+    ) as number;
+    if (forJudgementExists === 0) {
+      const now = new Date().toISOString();
+      db.run('INSERT INTO Results (ResultName, IsActive, CreatedDate) VALUES (?, 1, ?);', ['For Judgement', 1, now]);
     }
   }
 

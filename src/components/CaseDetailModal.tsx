@@ -358,11 +358,30 @@ export const CaseDetailModal: React.FC<Props> = ({
                           onChange={(e) => setUpdateResult(e.target.value)}
                           className="w-full h-8 px-2 bg-neutral-900 border border-neutral-700 rounded text-neutral-200 text-xs"
                         >
-                          {resultsList.map((r) => (
-                            <option key={r.ResultID} value={r.ResultName}>
-                              {r.ResultName}
-                            </option>
-                          ))}
+                          {resultsList.length === 0 ? (
+                            <>
+                              <option value="Pending">Pending</option>
+                              <option value="Adjourned">Adjourned</option>
+                              <option value="Disposed">Disposed</option>
+                              <option value="Allowed">Allowed</option>
+                              <option value="Dismissed">Dismissed</option>
+                              <option value="Reserved">Reserved</option>
+                              <option value="For Judgement">For Judgement</option>
+                              <option value="Withdrawn">Withdrawn</option>
+                              <option value="Other">Other</option>
+                            </>
+                          ) : (
+                            <>
+                              {resultsList.map((r) => (
+                                <option key={r.ResultID} value={r.ResultName}>
+                                  {r.ResultName}
+                                </option>
+                              ))}
+                              {!resultsList.some((r) => r.ResultName.toLowerCase() === 'for judgement') && (
+                                <option value="For Judgement">For Judgement</option>
+                              )}
+                            </>
+                          )}
                         </select>
                       </div>
                     </div>
