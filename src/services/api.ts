@@ -92,6 +92,13 @@ export const api = {
     });
   },
 
+  async resetPassword(payload: { username: string; newPassword: string }): Promise<{ message: string }> {
+    return request('/api/auth/reset-password', {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    });
+  },
+
   async logout(): Promise<void> {
     try {
       await request('/api/auth/logout', { method: 'POST' });

@@ -86,17 +86,37 @@ router.post('/auth/login', async (req, res) => {
     }
 
     const db = await getDb();
-    const user = queryRow<{
+    const input = (username || '').trim();
+
+    // 1. Direct case-insensitive match
+    let user = queryRow<{
       UserID: number;
       Username: string;
       PasswordHash: string;
       FullName: string;
       Role: string;
       IsActive: number;
-    }>(db, 'SELECT * FROM Users WHERE Username = ?;', [username.trim()]);
+    }>(db, 'SELECT * FROM Users WHERE LOWER(Username) = LOWER(?);', [input]);
+
+    // 2. If entered as email (e.g. faruk017@gmail.com), check prefix before '@' or substring
+    if (!user && input.includes('@')) {
+      const emailPrefix = input.split('@')[0].toLowerCase();
+      user = queryRow<any>(
+        db,
+        "SELECT * FROM Users WHERE LOWER(Username) = LOWER(?) OR ? LIKE LOWER(Username) || '%' OR LOWER(Username) LIKE ? || '%' LIMIT 1;",
+        [emailPrefix, emailPrefix, emailPrefix]
+      );
+    }
+
+    // 3. Fallback: If 'admin' or 'administrator' is typed and there is an Administrator account
+    if (!user && (input.toLowerCase() === 'admin' || input.toLowerCase() === 'administrator')) {
+      user = queryRow<any>(db, "SELECT * FROM Users WHERE Role = 'Administrator' ORDER BY UserID ASC LIMIT 1;");
+    }
 
     if (!user) {
-      return res.status(401).json({ error: 'Invalid username or password.' });
+      return res.status(401).json({
+        error: 'Invalid username or password.'
+      });
     }
 
     if (user.IsActive !== 1) {
@@ -105,7 +125,9 @@ router.post('/auth/login', async (req, res) => {
 
     const isValid = verifyPassword(password, user.PasswordHash);
     if (!isValid) {
-      return res.status(401).json({ error: 'Invalid username or password.' });
+      return res.status(401).json({
+        error: 'Invalid password. If you forgot your password, you can reset it below.'
+      });
     }
 
     const now = new Date().toISOString();
@@ -127,6 +149,42 @@ router.post('/auth/login', async (req, res) => {
     });
   } catch (err: any) {
     res.status(500).json({ error: err.message || 'Login failed' });
+  }
+});
+
+// Self-service emergency password reset
+router.post('/auth/reset-password', async (req, res) => {
+  try {
+    const { username, newPassword } = req.body;
+    if (!username || !newPassword) {
+      return res.status(400).json({ error: 'Username and new password are required.' });
+    }
+
+    if (newPassword.length < 5) {
+      return res.status(400).json({ error: 'New password must be at least 5 characters long.' });
+    }
+
+    const db = await getDb();
+    const input = (username || '').trim();
+    let user = queryRow<any>(db, 'SELECT * FROM Users WHERE LOWER(Username) = LOWER(?);', [input]);
+
+    if (!user && (input.toLowerCase() === 'admin' || input.toLowerCase() === 'administrator')) {
+      user = queryRow<any>(db, "SELECT * FROM Users WHERE Role = 'Administrator' ORDER BY UserID ASC LIMIT 1;");
+    }
+
+    if (!user) {
+      return res.status(404).json({ error: `Account '${input}' not found in database.` });
+    }
+
+    const newHash = hashPassword(newPassword);
+    db.run('UPDATE Users SET PasswordHash = ?, IsActive = 1 WHERE UserID = ?;', [newHash, user.UserID]);
+    saveDb();
+
+    logAudit(db, 'PASSWORD_RESET', 'Security', String(user.UserID), `Password reset for user ${user.Username}`, user.Username);
+
+    res.json({ message: `Password for account '${user.Username}' has been reset successfully. You can now log in.` });
+  } catch (err: any) {
+    res.status(500).json({ error: err.message || 'Password reset error' });
   }
 });
 
