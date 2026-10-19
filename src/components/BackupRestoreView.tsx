@@ -147,32 +147,39 @@ export const BackupRestoreView: React.FC<Props> = ({ onToast, onRefreshAll }) =>
 
       {/* Restore Safety Modal */}
       {showRestoreDialog && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-sm animate-fadeIn">
-          <div className="bg-neutral-900 border border-rose-600/60 rounded-xl shadow-2xl max-w-lg w-full p-5 space-y-4">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md animate-modal-backdrop">
+          <div className="bg-gradient-to-b from-neutral-900 to-neutral-950 border border-rose-600/60 rounded-2xl shadow-2xl shadow-black/80 max-w-lg w-full p-6 space-y-4 animate-modal-card relative overflow-hidden">
+            <div className="absolute top-0 inset-x-0 h-[2px] bg-gradient-to-r from-rose-600 via-rose-400 to-rose-600" />
+
             <div className="flex items-center gap-3 text-rose-400">
-              <AlertTriangle className="w-6 h-6 shrink-0" />
-              <h3 className="font-bold text-sm">Database Restoration Warning</h3>
+              <div className="p-2 rounded-xl bg-rose-950/80 border border-rose-800/60 text-rose-400">
+                <AlertTriangle className="w-5 h-5 shrink-0" />
+              </div>
+              <div>
+                <h3 className="font-bold text-sm text-neutral-100">Database Restoration Warning</h3>
+                <span className="text-[11px] text-neutral-400">Overwrite existing diary and case data</span>
+              </div>
             </div>
 
-            <p className="text-xs text-neutral-300 leading-relaxed">
+            <p className="text-xs text-neutral-300 leading-relaxed font-medium">
               Restoring a database will replace the current application data with the records from your backup file.
-              An automatic backup of your existing database will be created on disk before restoration begins.
+              An automatic safety backup of your existing database will be created on disk before restoration begins.
             </p>
 
-            <form onSubmit={handleRestoreSubmit} className="space-y-3 text-xs">
+            <form onSubmit={handleRestoreSubmit} className="space-y-3.5 text-xs">
               <div>
-                <label className="block text-neutral-400 mb-1">Select Backup File (.db format)</label>
+                <label className="block text-neutral-300 font-medium mb-1.5">Select Backup File (.db format)</label>
                 <input
                   type="file"
                   accept=".db,.sqlite,.sqlite3"
                   onChange={(e) => setRestoreFile(e.target.files?.[0] || null)}
                   required
-                  className="w-full text-xs text-neutral-400 file:mr-3 file:py-1 file:px-3 file:rounded file:border-0 file:text-xs file:bg-neutral-800 file:text-neutral-200"
+                  className="w-full text-xs text-neutral-400 file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:bg-neutral-800 file:text-neutral-200 hover:file:bg-neutral-700 form-pressable cursor-pointer"
                 />
               </div>
 
               <div>
-                <label className="block text-neutral-400 mb-1">
+                <label className="block text-neutral-300 font-medium mb-1.5">
                   Type <strong className="text-rose-400 font-mono">CONFIRM_RESTORE</strong> below to proceed:
                 </label>
                 <input
@@ -181,22 +188,22 @@ export const BackupRestoreView: React.FC<Props> = ({ onToast, onRefreshAll }) =>
                   onChange={(e) => setConfirmText(e.target.value)}
                   placeholder="CONFIRM_RESTORE"
                   required
-                  className="w-full h-8 px-2.5 bg-neutral-950 border border-neutral-700 rounded text-neutral-200 font-mono"
+                  className="form-input-modern w-full h-9 px-3 bg-neutral-950/80 border border-neutral-700/80 rounded-lg text-neutral-200 font-mono text-xs focus:outline-none focus:border-rose-500 focus:ring-2 focus:ring-rose-500/25 shadow-inner"
                 />
               </div>
 
-              <div className="flex items-center justify-end gap-2 pt-2 border-t border-neutral-800">
+              <div className="flex items-center justify-end gap-2 pt-3 border-t border-neutral-800/80">
                 <button
                   type="button"
                   onClick={() => setShowRestoreDialog(false)}
-                  className="px-3 py-1.5 bg-neutral-800 text-neutral-300 rounded hover:bg-neutral-700"
+                  className="px-3.5 py-2 bg-neutral-800/90 hover:bg-neutral-750 text-neutral-300 rounded-lg border border-neutral-700/60 transition-all form-pressable cursor-pointer"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={restoring || confirmText !== 'CONFIRM_RESTORE'}
-                  className="px-4 py-1.5 bg-rose-600 text-white font-semibold rounded hover:bg-rose-500 disabled:opacity-40"
+                  className="flex items-center gap-1.5 px-4 py-2 bg-gradient-to-r from-rose-600 to-rose-500 hover:from-rose-500 hover:to-rose-400 text-white font-bold rounded-lg shadow-md shadow-rose-950/50 disabled:opacity-40 transition-all form-pressable cursor-pointer"
                 >
                   {restoring ? 'Restoring...' : 'Replace Database'}
                 </button>

@@ -21,7 +21,7 @@ import {
   FileDown
 } from 'lucide-react';
 import { User } from '../types.js';
-import courtEmblem from '../assets/images/court_emblem_insignia_1790276040697.jpg';
+import { BangladeshGovEmblem } from './GovBrand.js';
 import judgeAvatar from '../assets/images/judge_officer_avatar_1790276066454.jpg';
 
 interface Props {
@@ -49,29 +49,25 @@ export const Sidebar: React.FC<Props> = ({
 
   const navItemClass = (viewName: string) => {
     const isActive = currentView === viewName;
-    return `w-full flex items-center justify-between px-3 py-2 text-xs font-medium rounded-md transition-colors ${
+    return `w-full flex items-center justify-between px-3 py-2 text-xs font-semibold rounded-lg transition-all form-pressable cursor-pointer ${
       isActive
-        ? 'bg-amber-700/20 text-amber-300 border border-amber-600/30'
-        : 'text-neutral-400 hover:text-neutral-200 hover:bg-neutral-800/60'
+        ? 'bg-[#006A4E]/15 text-[#006A4E] border border-[#006A4E]/30 shadow-xs'
+        : 'text-neutral-400 hover:text-neutral-100 hover:bg-neutral-800/70 border border-transparent'
     }`;
   };
 
   return (
     <aside className="w-64 bg-neutral-925 border-r border-neutral-800 flex flex-col shrink-0 h-full select-none overflow-hidden">
       {/* Court Header Brand Lockup */}
-      <div className="p-3 border-b border-neutral-800/80 bg-neutral-950/40 flex items-center gap-2.5">
-        <img
-          src={courtEmblem}
-          alt="Judicial Insignia"
-          className="w-8 h-8 rounded border border-neutral-700 object-cover shrink-0"
-          referrerPolicy="no-referrer"
-        />
+      <div className="p-3.5 border-b border-neutral-800/80 bg-neutral-950/60 flex items-center gap-2.5">
+        <BangladeshGovEmblem className="w-9 h-9 shrink-0 drop-shadow-xs" />
         <div className="overflow-hidden">
-          <div className="font-serif font-bold text-neutral-100 text-sm tracking-wide truncate">
-            Court Dairy
+          <div className="font-bold text-neutral-100 text-sm tracking-tight truncate flex items-center gap-1">
+            <span className="text-[#006A4E]">Court</span>
+            <span className="text-[#D92534]">Diary</span>
           </div>
-          <div className="text-[10px] text-neutral-400 font-mono tracking-wider truncate">
-            BENCH REGISTER
+          <div className="text-[10px] text-neutral-400 font-medium tracking-wide truncate">
+            Judicial Registry System
           </div>
         </div>
       </div>
@@ -97,10 +93,11 @@ export const Sidebar: React.FC<Props> = ({
             <button
               onClick={() => onNavigate('new-case')}
               className={navItemClass('new-case')}
+              title="Add New Court Diary Entry (Ctrl+N)"
             >
               <span className="flex items-center gap-2.5 truncate">
                 <PlusCircle className="w-4 h-4 shrink-0 text-emerald-500/90" />
-                <span>New Case</span>
+                <span>Add Court Diary Entry</span>
               </span>
               <kbd className="text-[9px] font-mono text-neutral-500 bg-neutral-800/80 px-1.5 py-0.5 rounded border border-neutral-700/60">
                 Ctrl+N

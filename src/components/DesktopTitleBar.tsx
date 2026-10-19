@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Scale, Minus, Square, X, WifiOff, Clock } from 'lucide-react';
-import courtEmblem from '../assets/images/court_emblem_insignia_1790276040697.jpg';
+import { BangladeshGovEmblem } from './GovBrand.js';
 
 interface Props {
   appName: string;
@@ -26,18 +26,13 @@ export const DesktopTitleBar: React.FC<Props> = ({ appName, courtName }) => {
   }, []);
 
   return (
-    <div className="h-8 bg-neutral-950 text-neutral-300 border-b border-neutral-800 flex items-center justify-between px-3 text-xs select-none shrink-0 z-50">
+    <div className="h-8 bg-[#00563F] text-emerald-50 border-b border-[#004332] flex items-center justify-between px-3 text-xs select-none shrink-0 z-50">
       {/* App Branding */}
       <div className="flex items-center gap-2">
-        <img
-          src={courtEmblem}
-          alt="Court Seal"
-          className="w-4 h-4 rounded-sm object-cover"
-          referrerPolicy="no-referrer"
-        />
-        <span className="font-semibold text-neutral-200 tracking-wide">{appName}</span>
-        <span className="text-neutral-500">|</span>
-        <span className="text-neutral-400 truncate max-w-sm hidden sm:inline">{courtName || 'Court Case Diary & Management System'}</span>
+        <BangladeshGovEmblem className="w-4 h-4 shrink-0" />
+        <span className="font-bold text-white tracking-wide">{appName}</span>
+        <span className="text-emerald-300/60 hidden sm:inline">|</span>
+        <span className="text-emerald-100/90 truncate max-w-sm hidden sm:inline text-[11px]">Judicial Registry System</span>
       </div>
 
       {/* Offline Status & Live Clock */}

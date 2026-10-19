@@ -107,58 +107,61 @@ export const AdvancedSearchView: React.FC<Props> = ({
   return (
     <div className="p-5 space-y-5 max-w-7xl mx-auto flex flex-col h-full overflow-y-auto">
       {/* Search Criteria Form */}
-      <form onSubmit={handleSearch} className="bg-neutral-900 border border-neutral-800 rounded-lg p-4 space-y-4 shadow-sm">
-        <div className="flex items-center justify-between border-b border-neutral-800 pb-2">
+      <form onSubmit={handleSearch} className="bg-gradient-to-b from-neutral-900 to-neutral-950 border border-neutral-800/90 rounded-2xl p-5 space-y-5 shadow-xl relative overflow-hidden">
+        {/* Top Accent Glow */}
+        <div className="absolute top-0 inset-x-0 h-[2px] bg-gradient-to-r from-amber-600 via-amber-400 to-amber-600" />
+
+        <div className="flex items-center justify-between border-b border-neutral-800/80 pb-3">
           <h2 className="text-sm font-semibold text-neutral-100 flex items-center gap-2">
             <Search className="w-4 h-4 text-amber-500" />
             <span>Advanced Search Parameters</span>
           </h2>
-          <span className="text-[11px] text-neutral-400">
-            Combine multiple parameters to narrow court dairy records
+          <span className="text-[11px] text-neutral-400 hidden sm:inline">
+            Combine multiple judicial parameters to filter court diary records
           </span>
         </div>
 
         {/* Row 1: Serial Range & Case Number & Result */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 text-xs">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5 text-xs">
           <div>
-            <label className="block text-neutral-400 mb-1">Serial Number (From)</label>
+            <label className="block text-neutral-300 font-medium mb-1.5">Serial Number (From)</label>
             <input
               type="number"
               value={serialFrom}
               onChange={(e) => setSerialFrom(e.target.value)}
               placeholder="Min serial..."
-              className="w-full h-8 px-2.5 bg-neutral-950 border border-neutral-700 rounded text-neutral-200"
+              className="form-input-modern w-full h-9 px-3 bg-neutral-950/80 border border-neutral-700/80 rounded-lg text-neutral-200 text-xs focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/25 shadow-inner"
             />
           </div>
 
           <div>
-            <label className="block text-neutral-400 mb-1">Serial Number (To)</label>
+            <label className="block text-neutral-300 font-medium mb-1.5">Serial Number (To)</label>
             <input
               type="number"
               value={serialTo}
               onChange={(e) => setSerialTo(e.target.value)}
               placeholder="Max serial..."
-              className="w-full h-8 px-2.5 bg-neutral-950 border border-neutral-700 rounded text-neutral-200"
+              className="form-input-modern w-full h-9 px-3 bg-neutral-950/80 border border-neutral-700/80 rounded-lg text-neutral-200 text-xs focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/25 shadow-inner"
             />
           </div>
 
           <div>
-            <label className="block text-neutral-400 mb-1">Case Number (Contains)</label>
+            <label className="block text-neutral-300 font-medium mb-1.5">Case Number (Contains)</label>
             <input
               type="text"
               value={caseNumber}
               onChange={(e) => setCaseNumber(e.target.value)}
-              placeholder="e.g. 104/2026..."
-              className="w-full h-8 px-2.5 bg-neutral-950 border border-neutral-700 rounded text-neutral-200"
+              placeholder="e.g. 104/2026, CM-, FMA-..."
+              className="form-input-modern w-full h-9 px-3 bg-neutral-950/80 border border-neutral-700/80 rounded-lg text-neutral-200 text-xs focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/25 shadow-inner"
             />
           </div>
 
           <div>
-            <label className="block text-neutral-400 mb-1">Case Result / Status</label>
+            <label className="block text-neutral-300 font-medium mb-1.5">Case Result / Status</label>
             <select
               value={result}
               onChange={(e) => setResult(e.target.value)}
-              className="w-full h-8 px-2.5 bg-neutral-950 border border-neutral-700 rounded text-neutral-200"
+              className="form-input-modern w-full h-9 px-3 bg-neutral-950/80 border border-neutral-700/80 rounded-lg text-neutral-200 text-xs focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/25 shadow-inner cursor-pointer"
             >
               <option value="All">All Results</option>
               {resultsList.map((r) => (
@@ -171,79 +174,79 @@ export const AdvancedSearchView: React.FC<Props> = ({
         </div>
 
         {/* Row 2: Date Ranges */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 text-xs">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5 text-xs">
           <div>
-            <label className="block text-neutral-400 mb-1">Case Date (From)</label>
+            <label className="block text-neutral-300 font-medium mb-1.5">Case Date (From)</label>
             <input
               type="date"
               value={caseDateFrom}
               onChange={(e) => setCaseDateFrom(e.target.value)}
-              className="w-full h-8 px-2.5 bg-neutral-950 border border-neutral-700 rounded text-neutral-200"
+              className="form-input-modern w-full h-9 px-3 bg-neutral-950/80 border border-neutral-700/80 rounded-lg text-neutral-200 text-xs focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/25 shadow-inner"
             />
           </div>
 
           <div>
-            <label className="block text-neutral-400 mb-1">Case Date (To)</label>
+            <label className="block text-neutral-300 font-medium mb-1.5">Case Date (To)</label>
             <input
               type="date"
               value={caseDateTo}
               onChange={(e) => setCaseDateTo(e.target.value)}
-              className="w-full h-8 px-2.5 bg-neutral-950 border border-neutral-700 rounded text-neutral-200"
+              className="form-input-modern w-full h-9 px-3 bg-neutral-950/80 border border-neutral-700/80 rounded-lg text-neutral-200 text-xs focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/25 shadow-inner"
             />
           </div>
 
           <div>
-            <label className="block text-neutral-400 mb-1">Dairy Date (From)</label>
+            <label className="block text-neutral-300 font-medium mb-1.5">Dairy Date (From)</label>
             <input
               type="date"
               value={dairyDateFrom}
               onChange={(e) => setDairyDateFrom(e.target.value)}
-              className="w-full h-8 px-2.5 bg-neutral-950 border border-neutral-700 rounded text-neutral-200"
+              className="form-input-modern w-full h-9 px-3 bg-neutral-950/80 border border-neutral-700/80 rounded-lg text-neutral-200 text-xs focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/25 shadow-inner"
             />
           </div>
 
           <div>
-            <label className="block text-neutral-400 mb-1">Dairy Date (To)</label>
+            <label className="block text-neutral-300 font-medium mb-1.5">Dairy Date (To)</label>
             <input
               type="date"
               value={dairyDateTo}
               onChange={(e) => setDairyDateTo(e.target.value)}
-              className="w-full h-8 px-2.5 bg-neutral-950 border border-neutral-700 rounded text-neutral-200"
+              className="form-input-modern w-full h-9 px-3 bg-neutral-950/80 border border-neutral-700/80 rounded-lg text-neutral-200 text-xs focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/25 shadow-inner"
             />
           </div>
         </div>
 
         {/* Row 3: Description & Remarks */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 text-xs">
           <div>
-            <label className="block text-neutral-400 mb-1">Description (Contains)</label>
+            <label className="block text-neutral-300 font-medium mb-1.5">Description (Contains)</label>
             <input
               type="text"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              placeholder="Search description keywords..."
-              className="w-full h-8 px-2.5 bg-neutral-950 border border-neutral-700 rounded text-neutral-200"
+              placeholder="Search description keywords or facts..."
+              className="form-input-modern w-full h-9 px-3 bg-neutral-950/80 border border-neutral-700/80 rounded-lg text-neutral-200 text-xs focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/25 shadow-inner"
             />
           </div>
 
           <div>
-            <label className="block text-neutral-400 mb-1">Remarks (Contains)</label>
+            <label className="block text-neutral-300 font-medium mb-1.5">Remarks (Contains)</label>
             <input
               type="text"
               value={remarks}
               onChange={(e) => setRemarks(e.target.value)}
-              placeholder="Search remarks keywords..."
-              className="w-full h-8 px-2.5 bg-neutral-950 border border-neutral-700 rounded text-neutral-200"
+              placeholder="Search remarks, orders or directives..."
+              className="form-input-modern w-full h-9 px-3 bg-neutral-950/80 border border-neutral-700/80 rounded-lg text-neutral-200 text-xs focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/25 shadow-inner"
             />
           </div>
         </div>
 
         {/* Buttons */}
-        <div className="flex items-center justify-between pt-2 border-t border-neutral-800">
+        <div className="flex items-center justify-between pt-3 border-t border-neutral-800/80 flex-wrap gap-2">
           <button
             type="button"
             onClick={handleReset}
-            className="flex items-center gap-1.5 px-3 py-1.5 bg-neutral-800 hover:bg-neutral-700 text-neutral-300 text-xs rounded transition-colors"
+            className="flex items-center gap-1.5 px-3.5 py-2 bg-neutral-800/90 hover:bg-neutral-750 text-neutral-300 text-xs rounded-lg border border-neutral-700/70 transition-all form-pressable cursor-pointer"
           >
             <RotateCcw className="w-3.5 h-3.5" />
             <span>Reset Filters</span>
@@ -252,9 +255,9 @@ export const AdvancedSearchView: React.FC<Props> = ({
           <button
             type="submit"
             disabled={loading}
-            className="flex items-center gap-1.5 px-5 py-1.5 bg-amber-600 hover:bg-amber-500 text-neutral-950 font-semibold text-xs rounded shadow-sm disabled:opacity-50 transition-colors"
+            className="flex items-center gap-2 px-6 py-2 bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-500 hover:to-amber-400 text-neutral-950 font-bold text-xs rounded-lg shadow-md shadow-amber-900/30 hover:shadow-amber-600/30 disabled:opacity-50 transition-all form-pressable cursor-pointer"
           >
-            <Search className="w-3.5 h-3.5" />
+            <Search className="w-4 h-4" />
             <span>{loading ? 'Searching...' : 'Search Records'}</span>
           </button>
         </div>

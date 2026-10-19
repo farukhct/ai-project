@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Shield, KeyRound, User, Lock, ArrowRight, AlertCircle, Database } from 'lucide-react';
-import courtEmblem from '../assets/images/court_emblem_insignia_1790276040697.jpg';
-import benchBanner from '../assets/images/courtroom_bench_banner_1790276054267.jpg';
+import { GovHeader, BangladeshGovEmblem } from './GovBrand.js';
 
 interface Props {
   onSetupComplete: (user: any) => void;
@@ -66,50 +65,41 @@ export const SetupView: React.FC<Props> = ({ onSetupComplete, onToast }) => {
   };
 
   return (
-    <div className="min-h-screen bg-neutral-950 flex flex-col justify-center items-center p-4 relative select-none">
-      {/* Background decoration */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-20">
-        <img
-          src={benchBanner}
-          alt="Courtroom"
-          className="w-full h-full object-cover filter blur-sm"
-          referrerPolicy="no-referrer"
-        />
-      </div>
+    <div className="min-h-screen bg-[#F0F4F8] flex flex-col justify-between select-none">
+      <GovHeader />
 
-      <div className="relative z-10 max-w-md w-full bg-neutral-900 border border-neutral-700/80 rounded-2xl shadow-2xl overflow-hidden animate-fadeIn">
-        {/* Header */}
-        <div className="p-6 pb-4 text-center border-b border-neutral-800 bg-neutral-950/80">
-          <div className="flex justify-center mb-3">
-            <img
-              src={courtEmblem}
-              alt="Court Seal"
-              className="w-16 h-16 rounded-xl border border-neutral-700 shadow-md object-cover"
-              referrerPolicy="no-referrer"
-            />
+      <main className="flex-1 flex items-center justify-center p-4">
+        <div className="max-w-md w-full bg-white border border-slate-200/90 rounded-2xl shadow-xl overflow-hidden animate-modal-card relative">
+          {/* Top Accent Line */}
+          <div className="absolute top-0 inset-x-0 h-1 bg-[#006A4E]" />
+
+          {/* Header */}
+          <div className="p-6 pb-4 text-center border-b border-slate-200 bg-slate-50/70">
+            <div className="flex justify-center mb-3">
+              <BangladeshGovEmblem className="w-16 h-16 drop-shadow-xs" />
+            </div>
+            <h1 className="text-xl font-bold text-slate-900 tracking-tight">
+              Court<span className="text-[#D92534]">Diary</span> Judicial System
+            </h1>
+            <div className="text-xs text-[#006A4E] font-bold tracking-wide mt-0.5">
+              Initial Administrator Setup (Government Portal)
+            </div>
+            <p className="text-[11px] text-slate-600 mt-2 leading-relaxed">
+              SQLite database initialized. Create the master judicial bench administrator credentials to activate the portal.
+            </p>
           </div>
-          <h1 className="text-xl font-bold font-serif text-neutral-100 tracking-tight">
-            Court Dairy System
-          </h1>
-          <div className="text-xs text-amber-500 font-medium tracking-wide mt-0.5">
-            Initial Administrator Setup (First-Run Wizard)
-          </div>
-          <p className="text-[11px] text-neutral-400 mt-2 leading-relaxed">
-            SQLite database <code className="text-neutral-300 font-mono">CourtDairy.db</code> created. Define your primary administrator credentials to secure this installation.
-          </p>
-        </div>
 
         {/* Form */}
         <form onSubmit={handleSubmit} className="p-6 space-y-4 text-xs">
           {errorMsg && (
-            <div className="p-3 bg-rose-950/70 border border-rose-800/80 rounded-lg text-rose-200 flex items-center gap-2">
+            <div className="p-3 bg-rose-950/70 border border-rose-800/80 rounded-lg text-rose-200 flex items-center gap-2 animate-slide-down">
               <AlertCircle className="w-4 h-4 text-rose-400 shrink-0" />
               <span>{errorMsg}</span>
             </div>
           )}
 
           <div>
-            <label className="block text-neutral-300 font-medium mb-1">
+            <label className="block text-neutral-300 font-medium mb-1.5">
               Administrator Username (Login ID) *
             </label>
             <div className="relative">
@@ -120,13 +110,13 @@ export const SetupView: React.FC<Props> = ({ onSetupComplete, onToast }) => {
                 onChange={(e) => setUsername(e.target.value)}
                 required
                 placeholder="e.g. admin or bench_officer"
-                className="w-full h-9 pl-9 pr-3 bg-neutral-950 border border-neutral-700 rounded-lg text-neutral-200 focus:outline-none focus:border-amber-500"
+                className="form-input-modern w-full h-10 pl-9 pr-3 bg-neutral-950/80 border border-neutral-700/80 rounded-lg text-neutral-100 placeholder:text-neutral-500 text-xs focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/25 shadow-inner"
               />
             </div>
           </div>
 
           <div>
-            <label className="block text-neutral-300 font-medium mb-1">
+            <label className="block text-neutral-300 font-medium mb-1.5">
               Full Official Name & Judicial Title *
             </label>
             <div className="relative">
@@ -137,13 +127,13 @@ export const SetupView: React.FC<Props> = ({ onSetupComplete, onToast }) => {
                 onChange={(e) => setFullName(e.target.value)}
                 required
                 placeholder="e.g. Chief Bench Officer M. Faruk"
-                className="w-full h-9 pl-9 pr-3 bg-neutral-950 border border-neutral-700 rounded-lg text-neutral-200 focus:outline-none focus:border-amber-500"
+                className="form-input-modern w-full h-10 pl-9 pr-3 bg-neutral-950/80 border border-neutral-700/80 rounded-lg text-neutral-100 placeholder:text-neutral-500 text-xs focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/25 shadow-inner"
               />
             </div>
           </div>
 
           <div>
-            <label className="block text-neutral-300 font-medium mb-1">
+            <label className="block text-neutral-300 font-medium mb-1.5">
               Master Password *
             </label>
             <div className="relative">
@@ -154,13 +144,13 @@ export const SetupView: React.FC<Props> = ({ onSetupComplete, onToast }) => {
                 onChange={(e) => setPassword(e.target.value)}
                 required
                 placeholder="Enter strong password (min 5 chars)"
-                className="w-full h-9 pl-9 pr-3 bg-neutral-950 border border-neutral-700 rounded-lg text-neutral-200 focus:outline-none focus:border-amber-500"
+                className="form-input-modern w-full h-10 pl-9 pr-3 bg-neutral-950/80 border border-neutral-700/80 rounded-lg text-neutral-100 placeholder:text-neutral-500 text-xs focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/25 shadow-inner"
               />
             </div>
           </div>
 
           <div>
-            <label className="block text-neutral-300 font-medium mb-1">
+            <label className="block text-neutral-300 font-medium mb-1.5">
               Confirm Password *
             </label>
             <div className="relative">
@@ -171,7 +161,7 @@ export const SetupView: React.FC<Props> = ({ onSetupComplete, onToast }) => {
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 required
                 placeholder="Confirm password"
-                className="w-full h-9 pl-9 pr-3 bg-neutral-950 border border-neutral-700 rounded-lg text-neutral-200 focus:outline-none focus:border-amber-500"
+                className="form-input-modern w-full h-10 pl-9 pr-3 bg-neutral-950/80 border border-neutral-700/80 rounded-lg text-neutral-100 placeholder:text-neutral-500 text-xs focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/25 shadow-inner"
               />
             </div>
           </div>
@@ -180,7 +170,7 @@ export const SetupView: React.FC<Props> = ({ onSetupComplete, onToast }) => {
             <button
               type="submit"
               disabled={submitting}
-              className="w-full h-10 bg-amber-600 hover:bg-amber-500 text-neutral-950 font-bold rounded-lg flex items-center justify-center gap-2 shadow-md transition-colors disabled:opacity-50"
+              className="w-full h-11 bg-[#006A4E] hover:bg-[#00543e] active:bg-[#004332] text-white font-bold rounded-lg flex items-center justify-center gap-2 shadow-md shadow-emerald-950/20 hover:shadow-lg transition-all form-pressable disabled:opacity-50 cursor-pointer text-xs uppercase tracking-wider"
             >
               <span>{submitting ? 'Creating Administrator...' : 'Initialize & Launch System'}</span>
               <ArrowRight className="w-4 h-4" />
@@ -188,11 +178,16 @@ export const SetupView: React.FC<Props> = ({ onSetupComplete, onToast }) => {
           </div>
         </form>
 
-        <div className="p-3 bg-neutral-950 text-center border-t border-neutral-800 text-[10px] text-neutral-500 flex items-center justify-center gap-1.5">
-          <Database className="w-3 h-3 text-amber-500" />
-          <span>Offline SQLite Storage · No Cloud Dependency</span>
+        <div className="p-3 bg-slate-50 text-center border-t border-slate-200 text-[10px] text-slate-500 flex items-center justify-center gap-1.5">
+          <Database className="w-3.5 h-3.5 text-[#006A4E]" />
+          <span>Offline SQLite Storage · Court Case Diary System</span>
         </div>
       </div>
+      </main>
+
+      <footer className="bg-white border-t border-slate-200 py-2.5 px-4 text-center text-xs text-slate-500">
+        Copyright © {new Date().getFullYear()} Court Case Diary & Judicial Management System. All rights reserved.
+      </footer>
     </div>
   );
 };

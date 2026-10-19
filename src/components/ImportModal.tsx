@@ -82,17 +82,20 @@ export const ImportModal: React.FC<Props> = ({ isOpen, onClose, onSuccess, onToa
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-fadeIn">
-      <div className="bg-neutral-900 border border-neutral-700 rounded-xl shadow-2xl max-w-2xl w-full flex flex-col max-h-[85vh] overflow-hidden">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/80 backdrop-blur-md animate-modal-backdrop">
+      <div className="bg-gradient-to-b from-neutral-900 to-neutral-950 border border-neutral-700/80 rounded-2xl shadow-2xl shadow-black/80 max-w-2xl w-full flex flex-col max-h-[85vh] overflow-hidden animate-modal-card relative">
+        {/* Top Accent Line */}
+        <div className="absolute top-0 inset-x-0 h-[2px] bg-gradient-to-r from-amber-600 via-amber-400 to-amber-600" />
+
         {/* Header */}
-        <div className="px-5 py-3 border-b border-neutral-800 bg-neutral-950 flex items-center justify-between">
+        <div className="px-5 py-3.5 border-b border-neutral-800 bg-neutral-950/90 backdrop-blur-sm flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Upload className="w-4 h-4 text-amber-500" />
             <h2 className="text-sm font-semibold text-neutral-100">Import Court Cases (CSV / Excel)</h2>
           </div>
           <button
             onClick={onClose}
-            className="p-1 text-neutral-400 hover:text-white rounded hover:bg-neutral-800"
+            className="p-1.5 text-neutral-400 hover:text-white rounded-full hover:bg-neutral-800 transition-colors form-pressable cursor-pointer"
           >
             <X className="w-4 h-4" />
           </button>
@@ -182,10 +185,10 @@ export const ImportModal: React.FC<Props> = ({ isOpen, onClose, onSuccess, onToa
         </div>
 
         {/* Footer */}
-        <div className="px-5 py-3 border-t border-neutral-800 bg-neutral-950 flex items-center justify-end gap-2 text-xs">
+        <div className="px-5 py-3.5 border-t border-neutral-800 bg-neutral-950/90 flex items-center justify-end gap-2 text-xs">
           <button
             onClick={onClose}
-            className="px-3 py-1.5 bg-neutral-800 hover:bg-neutral-700 text-neutral-300 rounded"
+            className="px-3.5 py-1.5 bg-neutral-800/90 hover:bg-neutral-750 text-neutral-300 rounded-lg transition-colors form-pressable cursor-pointer"
           >
             {importReport ? 'Close' : 'Cancel'}
           </button>
@@ -193,7 +196,7 @@ export const ImportModal: React.FC<Props> = ({ isOpen, onClose, onSuccess, onToa
             <button
               onClick={handleImportSubmit}
               disabled={importing || parsedRows.length === 0}
-              className="flex items-center gap-1.5 px-4 py-1.5 bg-amber-600 hover:bg-amber-500 text-neutral-950 font-semibold rounded disabled:opacity-50"
+              className="flex items-center gap-1.5 px-4 py-1.5 bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-500 hover:to-amber-400 text-neutral-950 font-bold rounded-lg shadow-md shadow-amber-900/30 hover:shadow-amber-600/30 disabled:opacity-50 transition-all form-pressable cursor-pointer"
             >
               <Upload className="w-3.5 h-3.5" />
               <span>{importing ? 'Importing Records...' : 'Execute Import'}</span>

@@ -105,8 +105,9 @@ export const CaseListView: React.FC<Props> = ({
   const resultBadgeClass = (result: string) => {
     const r = (result || '').toLowerCase();
     if (r === 'pending') return 'text-amber-300 bg-amber-950/70 border-amber-800/80';
-    if (['disposed', 'allowed'].includes(r)) return 'text-emerald-300 bg-emerald-950/70 border-emerald-800/80';
+    if (['disposed', 'disposed of', 'allowed', 'absolute'].includes(r)) return 'text-emerald-300 bg-emerald-950/70 border-emerald-800/80';
     if (['dismissed', 'withdrawn'].includes(r)) return 'text-rose-300 bg-rose-950/70 border-rose-800/80';
+    if (['discharged'].includes(r)) return 'text-teal-300 bg-teal-950/70 border-teal-800/80';
     if (r === 'adjourned') return 'text-sky-300 bg-sky-950/70 border-sky-800/80';
     if (['reserved', 'for judgement', 'for judgment'].includes(r)) return 'text-purple-300 bg-purple-950/70 border-purple-800/80';
     return 'text-neutral-300 bg-neutral-800 border-neutral-700';
@@ -169,17 +170,21 @@ export const CaseListView: React.FC<Props> = ({
           <select
             value={filterResult}
             onChange={(e) => setFilterResult(e.target.value)}
-            className="h-8 px-2 bg-neutral-950 border border-neutral-700 rounded text-xs text-neutral-200 focus:outline-none focus:border-amber-500"
+            className="h-8 px-2 bg-neutral-950 border border-neutral-700 rounded text-xs text-neutral-200 focus:outline-none focus:border-amber-500 cursor-pointer"
           >
             <option value="ALL">All Outcomes</option>
             <option value="Pending">Pending</option>
-            <option value="Adjourned">Adjourned</option>
+            <option value="Absolute">Absolute</option>
+            <option value="Discharged">Discharged</option>
+            <option value="Disposed of">Disposed of</option>
             <option value="Disposed">Disposed</option>
             <option value="Allowed">Allowed</option>
             <option value="Dismissed">Dismissed</option>
-            <option value="Reserved">Reserved</option>
+            <option value="Adjourned">Adjourned</option>
             <option value="For Judgement">For Judgement</option>
             <option value="Withdrawn">Withdrawn</option>
+            <option value="Reserved">Reserved</option>
+            <option value="Others">Others</option>
           </select>
 
           <span className="text-neutral-700 hidden sm:inline">|</span>

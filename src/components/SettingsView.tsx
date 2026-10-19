@@ -53,46 +53,49 @@ export const SettingsView: React.FC<Props> = ({
       </div>
 
       {/* Settings Form */}
-      <form onSubmit={handleSubmit} className="bg-neutral-900 border border-neutral-800 p-5 rounded-lg space-y-4 text-xs shadow-sm">
+      <form onSubmit={handleSubmit} className="bg-gradient-to-b from-neutral-900 to-neutral-950 border border-neutral-800/90 p-6 rounded-2xl space-y-6 text-xs shadow-xl relative overflow-hidden">
+        {/* Top Accent Line */}
+        <div className="absolute top-0 inset-x-0 h-[2px] bg-gradient-to-r from-amber-600 via-amber-400 to-amber-600" />
+
         {/* Organization Details */}
         <div>
-          <h3 className="font-semibold text-neutral-200 text-xs mb-3 border-b border-neutral-800 pb-1">
+          <h3 className="font-semibold text-neutral-100 text-xs mb-3.5 border-b border-neutral-800/80 pb-2">
             Court & Judiciary Identity
           </h3>
-          <div className="space-y-3">
+          <div className="space-y-3.5">
             <div>
-              <label className="block text-neutral-400 mb-1">Court / Bench Organization Name *</label>
+              <label className="block text-neutral-300 font-medium mb-1.5">Court / Bench Organization Name *</label>
               <input
                 type="text"
                 value={form.courtName}
                 onChange={(e) => setForm({ ...form, courtName: e.target.value })}
                 required
-                className="w-full h-8 px-3 bg-neutral-950 border border-neutral-700 rounded text-neutral-200"
+                className="form-input-modern w-full h-9 px-3 bg-neutral-950/80 border border-neutral-700/80 rounded-lg text-neutral-200 text-xs focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/25 shadow-inner"
               />
-              <span className="text-[10px] text-neutral-500 mt-0.5 block">
+              <span className="text-[10px] text-neutral-500 mt-1 block">
                 Appears at the top of printable cause lists, single case sheets, and official reports.
               </span>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
               <div>
-                <label className="block text-neutral-400 mb-1">Application Title</label>
+                <label className="block text-neutral-300 font-medium mb-1.5">Application Title</label>
                 <input
                   type="text"
                   value={form.appName}
                   onChange={(e) => setForm({ ...form, appName: e.target.value })}
                   required
-                  className="w-full h-8 px-3 bg-neutral-950 border border-neutral-700 rounded text-neutral-200"
+                  className="form-input-modern w-full h-9 px-3 bg-neutral-950/80 border border-neutral-700/80 rounded-lg text-neutral-200 text-xs focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/25 shadow-inner"
                 />
               </div>
 
               <div>
-                <label className="block text-neutral-400 mb-1">Application Subtitle</label>
+                <label className="block text-neutral-300 font-medium mb-1.5">Application Subtitle</label>
                 <input
                   type="text"
                   value={form.appSubtitle}
                   onChange={(e) => setForm({ ...form, appSubtitle: e.target.value })}
-                  className="w-full h-8 px-3 bg-neutral-950 border border-neutral-700 rounded text-neutral-200"
+                  className="form-input-modern w-full h-9 px-3 bg-neutral-950/80 border border-neutral-700/80 rounded-lg text-neutral-200 text-xs focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/25 shadow-inner"
                 />
               </div>
             </div>
@@ -101,27 +104,27 @@ export const SettingsView: React.FC<Props> = ({
 
         {/* Printable Headers & Footers */}
         <div className="pt-2">
-          <h3 className="font-semibold text-neutral-200 text-xs mb-3 border-b border-neutral-800 pb-1">
+          <h3 className="font-semibold text-neutral-100 text-xs mb-3.5 border-b border-neutral-800/80 pb-2">
             Report Header & Footer Design
           </h3>
-          <div className="space-y-3">
+          <div className="space-y-3.5">
             <div>
-              <label className="block text-neutral-400 mb-1">Official Report Header Banner</label>
+              <label className="block text-neutral-300 font-medium mb-1.5">Official Report Header Banner</label>
               <input
                 type="text"
                 value={form.reportHeader}
                 onChange={(e) => setForm({ ...form, reportHeader: e.target.value })}
-                className="w-full h-8 px-3 bg-neutral-950 border border-neutral-700 rounded text-neutral-200 uppercase"
+                className="form-input-modern w-full h-9 px-3 bg-neutral-950/80 border border-neutral-700/80 rounded-lg text-neutral-200 text-xs uppercase focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/25 shadow-inner"
               />
             </div>
 
             <div>
-              <label className="block text-neutral-400 mb-1">Official Report Footer Text</label>
+              <label className="block text-neutral-300 font-medium mb-1.5">Official Report Footer Text</label>
               <input
                 type="text"
                 value={form.reportFooter}
                 onChange={(e) => setForm({ ...form, reportFooter: e.target.value })}
-                className="w-full h-8 px-3 bg-neutral-950 border border-neutral-700 rounded text-neutral-200"
+                className="form-input-modern w-full h-9 px-3 bg-neutral-950/80 border border-neutral-700/80 rounded-lg text-neutral-200 text-xs focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/25 shadow-inner"
               />
             </div>
           </div>
@@ -129,16 +132,16 @@ export const SettingsView: React.FC<Props> = ({
 
         {/* Operational Defaults */}
         <div className="pt-2">
-          <h3 className="font-semibold text-neutral-200 text-xs mb-3 border-b border-neutral-800 pb-1">
+          <h3 className="font-semibold text-neutral-100 text-xs mb-3.5 border-b border-neutral-800/80 pb-2">
             Operational Defaults
           </h3>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5">
             <div>
-              <label className="block text-neutral-400 mb-1">Default Initial Case Result</label>
+              <label className="block text-neutral-300 font-medium mb-1.5">Default Initial Case Result</label>
               <select
                 value={form.defaultResult}
                 onChange={(e) => setForm({ ...form, defaultResult: e.target.value })}
-                className="w-full h-8 px-2.5 bg-neutral-950 border border-neutral-700 rounded text-neutral-200"
+                className="form-input-modern w-full h-9 px-3 bg-neutral-950/80 border border-neutral-700/80 rounded-lg text-neutral-200 text-xs focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/25 shadow-inner cursor-pointer"
               >
                 {resultsList.map((r) => (
                   <option key={r.ResultID} value={r.ResultName}>
@@ -149,7 +152,7 @@ export const SettingsView: React.FC<Props> = ({
             </div>
 
             <div>
-              <label className="block text-neutral-400 mb-1">Display Date Standard</label>
+              <label className="block text-neutral-300 font-medium mb-1.5">Display Date Standard</label>
               <select
                 value={form.dateFormat || 'DD-MM-YYYY'}
                 onChange={(e) => {
@@ -157,7 +160,7 @@ export const SettingsView: React.FC<Props> = ({
                   setForm({ ...form, dateFormat: val });
                   setStoredDateFormat(val as DateFormatPattern);
                 }}
-                className="w-full h-8 px-2.5 bg-neutral-950 border border-neutral-700 rounded text-amber-300 font-mono text-xs focus:outline-none focus:border-amber-500"
+                className="form-input-modern w-full h-9 px-3 bg-neutral-950/80 border border-neutral-700/80 rounded-lg text-amber-300 font-mono text-xs focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/25 shadow-inner cursor-pointer"
               >
                 {DATE_FORMAT_OPTIONS.map((opt) => (
                   <option key={opt.id} value={opt.id}>
@@ -168,11 +171,11 @@ export const SettingsView: React.FC<Props> = ({
             </div>
 
             <div>
-              <label className="block text-neutral-400 mb-1">Visual Theme</label>
+              <label className="block text-neutral-300 font-medium mb-1.5">Visual Theme</label>
               <select
                 value={form.theme || 'dark'}
                 onChange={(e) => setForm({ ...form, theme: e.target.value })}
-                className="w-full h-8 px-2.5 bg-neutral-950 border border-neutral-700 rounded text-neutral-200 focus:outline-none focus:border-amber-500"
+                className="form-input-modern w-full h-9 px-3 bg-neutral-950/80 border border-neutral-700/80 rounded-lg text-neutral-200 text-xs focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/25 shadow-inner cursor-pointer"
               >
                 <option value="dark">Dark Theme (Judicial Night)</option>
                 <option value="light">Light Theme (Judicial Day)</option>
@@ -180,21 +183,21 @@ export const SettingsView: React.FC<Props> = ({
             </div>
 
             <div>
-              <label className="block text-neutral-400 mb-1">Upcoming Dairy Window (Days)</label>
+              <label className="block text-neutral-300 font-medium mb-1.5">Upcoming Dairy Window (Days)</label>
               <input
                 type="number"
                 value={form.upcomingDays}
                 onChange={(e) => setForm({ ...form, upcomingDays: e.target.value })}
-                className="w-full h-8 px-3 bg-neutral-950 border border-neutral-700 rounded text-neutral-200 font-mono"
+                className="form-input-modern w-full h-9 px-3 bg-neutral-950/80 border border-neutral-700/80 rounded-lg text-neutral-200 font-mono text-xs focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/25 shadow-inner"
               />
             </div>
 
             <div>
-              <label className="block text-neutral-400 mb-1">Automatic Database Backup Cadence</label>
+              <label className="block text-neutral-300 font-medium mb-1.5">Automatic Database Backup Cadence</label>
               <select
                 value={form.autoBackup}
                 onChange={(e) => setForm({ ...form, autoBackup: e.target.value })}
-                className="w-full h-8 px-2.5 bg-neutral-950 border border-neutral-700 rounded text-neutral-200"
+                className="form-input-modern w-full h-9 px-3 bg-neutral-950/80 border border-neutral-700/80 rounded-lg text-neutral-200 text-xs focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/25 shadow-inner cursor-pointer"
               >
                 <option value="Daily">Daily on Launch</option>
                 <option value="Weekly">Weekly</option>
@@ -209,10 +212,10 @@ export const SettingsView: React.FC<Props> = ({
           <button
             type="submit"
             disabled={saving}
-            className="flex items-center gap-1.5 px-5 py-2 bg-amber-600 hover:bg-amber-500 text-neutral-950 font-semibold rounded shadow-sm disabled:opacity-50 transition-colors"
+            className="flex items-center gap-2 px-6 py-2.5 bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-500 hover:to-amber-400 text-neutral-950 font-bold rounded-lg shadow-md shadow-amber-900/30 hover:shadow-amber-600/30 disabled:opacity-50 transition-all form-pressable cursor-pointer"
           >
             <Save className="w-4 h-4" />
-            <span>{saving ? 'Saving...' : 'Save Configuration'}</span>
+            <span>{saving ? 'Saving Configuration...' : 'Save Configuration'}</span>
           </button>
         </div>
       </form>

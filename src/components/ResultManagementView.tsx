@@ -91,20 +91,25 @@ export const ResultManagementView: React.FC<Props> = ({
       </div>
 
       {/* Add New Result Form */}
-      <form onSubmit={handleAdd} className="bg-neutral-900 border border-neutral-800 p-4 rounded-lg space-y-3">
-        <h3 className="text-xs font-semibold text-neutral-200">Add New Result Outcome</h3>
+      <form onSubmit={handleAdd} className="bg-gradient-to-b from-neutral-900 to-neutral-950 border border-neutral-800/90 p-5 rounded-2xl space-y-3.5 shadow-xl relative overflow-hidden">
+        <div className="absolute top-0 inset-x-0 h-[2px] bg-gradient-to-r from-amber-600 via-amber-400 to-amber-600" />
+
+        <h3 className="text-xs font-semibold text-neutral-100 flex items-center gap-1.5">
+          <Plus className="w-3.5 h-3.5 text-amber-500" />
+          <span>Add New Result Outcome Category</span>
+        </h3>
         <div className="flex items-center gap-2">
           <input
             type="text"
             value={newResultName}
             onChange={(e) => setNewResultName(e.target.value)}
-            placeholder="e.g. Adjourned sine die, Compromised, Remanded"
-            className="flex-1 h-8 px-3 bg-neutral-950 border border-neutral-700 rounded text-neutral-200 text-xs focus:outline-none focus:border-amber-500"
+            placeholder="e.g. Adjourned sine die, Compromised, Bail Confirmed"
+            className="form-input-modern flex-1 h-9 px-3 bg-neutral-950/80 border border-neutral-700/80 rounded-lg text-neutral-200 text-xs focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/25 shadow-inner"
           />
           <button
             type="submit"
             disabled={saving || !newResultName.trim()}
-            className="flex items-center gap-1 px-4 py-1.5 bg-amber-600 hover:bg-amber-500 text-neutral-950 font-semibold text-xs rounded shadow-sm disabled:opacity-50 transition-colors"
+            className="flex items-center gap-1.5 px-5 py-2 bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-500 hover:to-amber-400 text-neutral-950 font-bold text-xs rounded-lg shadow-md shadow-amber-900/30 hover:shadow-amber-600/30 disabled:opacity-50 transition-all form-pressable cursor-pointer shrink-0"
           >
             <Plus className="w-3.5 h-3.5" />
             <span>Add Category</span>

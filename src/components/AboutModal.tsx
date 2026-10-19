@@ -1,7 +1,6 @@
 import React from 'react';
 import { X, Database, ShieldCheck, HardDrive, Cpu, ExternalLink } from 'lucide-react';
-import courtEmblem from '../assets/images/court_emblem_insignia_1790276040697.jpg';
-import benchBanner from '../assets/images/courtroom_bench_banner_1790276054267.jpg';
+import { BangladeshGovEmblem } from './GovBrand.js';
 
 interface Props {
   isOpen: boolean;
@@ -21,44 +20,35 @@ export const AboutModal: React.FC<Props> = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-fadeIn">
-      <div className="bg-neutral-900 border border-neutral-700 rounded-xl shadow-2xl max-w-lg w-full overflow-hidden flex flex-col">
-        {/* Banner image */}
-        <div className="relative h-32 w-full overflow-hidden">
-          <img
-            src={benchBanner}
-            alt="Judicial Bench"
-            className="w-full h-full object-cover"
-            referrerPolicy="no-referrer"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-neutral-900 via-neutral-900/40 to-transparent"></div>
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-md animate-modal-backdrop">
+      <div className="bg-neutral-900 border border-neutral-700/80 rounded-2xl shadow-2xl max-w-lg w-full overflow-hidden flex flex-col animate-modal-card relative">
+        <div className="absolute top-0 inset-x-0 h-1 bg-[#006A4E]" />
+
+        {/* Header */}
+        <div className="p-5 border-b border-neutral-800 bg-neutral-950 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <BangladeshGovEmblem className="w-10 h-10 drop-shadow-xs" />
+            <div>
+              <h2 className="text-base font-bold text-neutral-100 tracking-tight flex items-center gap-1.5">
+                <span className="text-[#006A4E]">Court</span>
+                <span className="text-[#D92534]">Diary</span>
+                <span className="text-xs text-neutral-400 font-normal">| Judicial System</span>
+              </h2>
+              <div className="text-[11px] text-[#006A4E] font-semibold">
+                Judicial Case Diary & Management System
+              </div>
+            </div>
+          </div>
           <button
             onClick={onClose}
-            className="absolute top-3 right-3 p-1 rounded-full bg-black/60 text-neutral-300 hover:text-white"
+            className="p-1.5 rounded-full hover:bg-neutral-800 text-neutral-400 hover:text-neutral-100 transition-colors form-pressable cursor-pointer"
           >
             <X className="w-4 h-4" />
           </button>
         </div>
 
-        {/* Info */}
+        {/* Content Body */}
         <div className="p-5 space-y-4 text-xs">
-          <div className="flex items-center gap-3 -mt-8 relative z-10">
-            <img
-              src={courtEmblem}
-              alt="Judicial Insignia"
-              className="w-14 h-14 rounded-lg border-2 border-neutral-700 object-cover shadow-lg"
-              referrerPolicy="no-referrer"
-            />
-            <div>
-              <h2 className="text-base font-bold text-neutral-100 font-serif tracking-tight">
-                {appName}
-              </h2>
-              <div className="text-[11px] text-amber-400 font-medium">
-                {appSubtitle}
-              </div>
-            </div>
-          </div>
-
           <div className="bg-neutral-950 p-3 rounded-lg border border-neutral-800 space-y-2">
             <div className="text-neutral-300">
               <strong>Institution:</strong> {courtName}

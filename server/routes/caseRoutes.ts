@@ -353,6 +353,15 @@ router.post('/cases', requireAuth, async (req: AuthenticatedRequest, res: Respon
     const newId = queryScalar(db, 'SELECT last_insert_rowid();') as number;
     logAudit(db, 'CREATE_CASE', 'CourtDiary', String(newId), `Created case #${caseNumber} (Serial ${finalSerial})`, createdBy);
 
+    // If a custom result is entered, also register it in Results table for future reuse
+    if (result && result.toLowerCase() !== 'others' && result.toLowerCase() !== 'other') {
+      const existingRes = queryScalar(db, 'SELECT COUNT(*) FROM Results WHERE LOWER(ResultName) = LOWER(?);', [result]) as number;
+      if (existingRes === 0) {
+        db.run('INSERT INTO Results (ResultName, IsActive, CreatedDate) VALUES (?, 1, ?);', [result, now]);
+        saveDb();
+      }
+    }
+
     res.status(201).json({
       message: 'Case saved successfully.',
       caseId: newId,
@@ -437,6 +446,15 @@ router.put('/cases/:id', requireAuth, async (req: AuthenticatedRequest, res: Res
     });
 
     logAudit(db, 'UPDATE_CASE', 'CourtDiary', String(caseId), `Updated case #${caseNumber}`, updatedBy);
+
+    // If a custom result is entered, also register it in Results table for future reuse
+    if (result && result.toLowerCase() !== 'others' && result.toLowerCase() !== 'other') {
+      const existingRes = queryScalar(db, 'SELECT COUNT(*) FROM Results WHERE LOWER(ResultName) = LOWER(?);', [result]) as number;
+      if (existingRes === 0) {
+        db.run('INSERT INTO Results (ResultName, IsActive, CreatedDate) VALUES (?, 1, ?);', [result, now]);
+        saveDb();
+      }
+    }
 
     res.json({ message: 'Case updated successfully.' });
   } catch (err: any) {

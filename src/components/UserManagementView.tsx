@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Users, Plus, Shield, User as UserIcon, Trash2, Key, Edit2 } from 'lucide-react';
+import { Users, Plus, Shield, User as UserIcon, Trash2, Key, Edit2, UserPlus } from 'lucide-react';
 import { User } from '../types.js';
 import { api } from '../services/api.js';
 
@@ -128,7 +128,7 @@ export const UserManagementView: React.FC<Props> = ({ currentUser, onToast }) =>
 
         <button
           onClick={() => setShowAddUser(!showAddUser)}
-          className="flex items-center gap-1.5 px-3 py-1.5 bg-amber-600 hover:bg-amber-500 text-neutral-950 font-semibold rounded text-xs transition-colors"
+          className="flex items-center gap-1.5 px-3.5 py-2 bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-500 hover:to-amber-400 text-neutral-950 font-bold rounded-lg text-xs shadow-md shadow-amber-900/30 transition-all form-pressable cursor-pointer"
         >
           <Plus className="w-3.5 h-3.5" />
           <span>{showAddUser ? 'Close Form' : 'Create User'}</span>
@@ -137,52 +137,57 @@ export const UserManagementView: React.FC<Props> = ({ currentUser, onToast }) =>
 
       {/* Add User Form */}
       {showAddUser && (
-        <form onSubmit={handleCreateUser} className="bg-neutral-900 border border-amber-600/40 p-4 rounded-lg space-y-3 animate-fadeIn text-xs">
-          <h3 className="font-semibold text-amber-300">Create New Judicial User Account</h3>
+        <form onSubmit={handleCreateUser} className="bg-gradient-to-b from-neutral-900 to-neutral-950 border border-amber-600/50 p-5 rounded-2xl space-y-4 shadow-xl animate-slide-down text-xs relative overflow-hidden">
+          <div className="absolute top-0 inset-x-0 h-[2px] bg-gradient-to-r from-amber-600 via-amber-400 to-amber-600" />
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <h3 className="font-semibold text-amber-300 text-xs flex items-center gap-1.5">
+            <UserPlus className="w-4 h-4 text-amber-400" />
+            <span>Create New Judicial User Account</span>
+          </h3>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
             <div>
-              <label className="block text-neutral-400 mb-1">Username (Login ID) *</label>
+              <label className="block text-neutral-300 font-medium mb-1.5">Username (Login ID) *</label>
               <input
                 type="text"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
                 required
                 placeholder="e.g. officer_ahmed"
-                className="w-full h-8 px-2.5 bg-neutral-950 border border-neutral-700 rounded text-neutral-200"
+                className="form-input-modern w-full h-9 px-3 bg-neutral-950/80 border border-neutral-700/80 rounded-lg text-neutral-200 text-xs focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/25 shadow-inner"
               />
             </div>
 
             <div>
-              <label className="block text-neutral-400 mb-1">Full Name & Title *</label>
+              <label className="block text-neutral-300 font-medium mb-1.5">Full Name & Title *</label>
               <input
                 type="text"
                 value={fullName}
                 onChange={(e) => setFullName(e.target.value)}
                 required
                 placeholder="e.g. Hon. Magistrate Faruk"
-                className="w-full h-8 px-2.5 bg-neutral-950 border border-neutral-700 rounded text-neutral-200"
+                className="form-input-modern w-full h-9 px-3 bg-neutral-950/80 border border-neutral-700/80 rounded-lg text-neutral-200 text-xs focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/25 shadow-inner"
               />
             </div>
 
             <div>
-              <label className="block text-neutral-400 mb-1">Password *</label>
+              <label className="block text-neutral-300 font-medium mb-1.5">Password *</label>
               <input
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
-                placeholder="Secure password..."
-                className="w-full h-8 px-2.5 bg-neutral-950 border border-neutral-700 rounded text-neutral-200"
+                placeholder="Secure password (min 5 chars)..."
+                className="form-input-modern w-full h-9 px-3 bg-neutral-950/80 border border-neutral-700/80 rounded-lg text-neutral-200 text-xs focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/25 shadow-inner"
               />
             </div>
 
             <div>
-              <label className="block text-neutral-400 mb-1">Authorization Role</label>
+              <label className="block text-neutral-300 font-medium mb-1.5">Authorization Role</label>
               <select
                 value={role}
                 onChange={(e) => setRole(e.target.value as any)}
-                className="w-full h-8 px-2.5 bg-neutral-950 border border-neutral-700 rounded text-neutral-200"
+                className="form-input-modern w-full h-9 px-3 bg-neutral-950/80 border border-neutral-700/80 rounded-lg text-neutral-200 text-xs focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/25 shadow-inner cursor-pointer"
               >
                 <option value="User">User / Bench Officer (CRUD & Print)</option>
                 <option value="Administrator">Administrator (Full System & User Control)</option>
@@ -194,14 +199,14 @@ export const UserManagementView: React.FC<Props> = ({ currentUser, onToast }) =>
             <button
               type="button"
               onClick={() => setShowAddUser(false)}
-              className="px-3 py-1 bg-neutral-800 text-neutral-300 rounded hover:bg-neutral-700"
+              className="px-3.5 py-1.5 bg-neutral-800/90 hover:bg-neutral-750 text-neutral-300 rounded-lg text-xs form-pressable cursor-pointer"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={saving}
-              className="px-4 py-1 bg-amber-600 text-neutral-950 font-semibold rounded hover:bg-amber-500 disabled:opacity-50"
+              className="px-5 py-1.5 bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-500 hover:to-amber-400 text-neutral-950 font-bold rounded-lg shadow-md shadow-amber-900/30 disabled:opacity-50 text-xs form-pressable cursor-pointer"
             >
               {saving ? 'Creating...' : 'Save User Account'}
             </button>
@@ -258,18 +263,18 @@ export const UserManagementView: React.FC<Props> = ({ currentUser, onToast }) =>
                 </div>
 
                 {isChangingPass ? (
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-2 animate-slide-down">
                     <input
                       type="password"
                       placeholder="New password (min 5 chars)"
                       value={newPassword}
                       onChange={(e) => setNewPassword(e.target.value)}
-                      className="h-7 px-2 bg-neutral-950 border border-amber-500 rounded text-neutral-200 text-xs"
+                      className="form-input-modern h-8 px-2.5 bg-neutral-950/90 border border-amber-500 rounded-lg text-neutral-200 text-xs focus:outline-none focus:ring-2 focus:ring-amber-500/25"
                       autoFocus
                     />
                     <button
                       onClick={() => handleUpdatePassword(Number(uId))}
-                      className="px-2 py-1 bg-amber-600 text-neutral-950 font-semibold rounded text-xs hover:bg-amber-500"
+                      className="px-3 py-1.5 bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-500 hover:to-amber-400 text-neutral-950 font-bold rounded-lg text-xs shadow-sm transition-all form-pressable cursor-pointer"
                     >
                       Save
                     </button>
@@ -278,7 +283,7 @@ export const UserManagementView: React.FC<Props> = ({ currentUser, onToast }) =>
                         setChangingPassUserId(null);
                         setNewPassword('');
                       }}
-                      className="px-2 py-1 bg-neutral-800 text-neutral-300 rounded text-xs hover:bg-neutral-700"
+                      className="px-2.5 py-1.5 bg-neutral-800 text-neutral-300 rounded-lg text-xs hover:bg-neutral-700 transition-colors form-pressable cursor-pointer"
                     >
                       Cancel
                     </button>
@@ -287,9 +292,9 @@ export const UserManagementView: React.FC<Props> = ({ currentUser, onToast }) =>
                   <div className="flex items-center gap-2">
                     <button
                       onClick={() => setChangingPassUserId(Number(uId))}
-                      className="flex items-center gap-1 px-2.5 py-1 bg-neutral-800 hover:bg-neutral-700 text-neutral-300 rounded text-xs border border-neutral-700 transition-colors"
+                      className="flex items-center gap-1.5 px-3 py-1.5 bg-neutral-800/90 hover:bg-neutral-750 text-neutral-300 rounded-lg text-xs border border-neutral-700/80 transition-all form-pressable cursor-pointer"
                     >
-                      <Key className="w-3.5 h-3.5" />
+                      <Key className="w-3.5 h-3.5 text-amber-500" />
                       <span>Reset Password</span>
                     </button>
 
@@ -297,10 +302,10 @@ export const UserManagementView: React.FC<Props> = ({ currentUser, onToast }) =>
                       <>
                         <button
                           onClick={() => handleToggleActive(u)}
-                          className={`px-2 py-1 rounded text-xs border transition-colors ${
+                          className={`px-3 py-1.5 rounded-lg text-xs border transition-all form-pressable cursor-pointer ${
                             uIsActive === 1
-                              ? 'bg-neutral-800 hover:bg-neutral-700 text-neutral-400 border-neutral-700'
-                              : 'bg-emerald-950 text-emerald-400 border-emerald-800'
+                              ? 'bg-neutral-800/90 hover:bg-neutral-750 text-neutral-400 border-neutral-700/80'
+                              : 'bg-emerald-950/80 text-emerald-300 border-emerald-800 hover:bg-emerald-900'
                           }`}
                         >
                           {uIsActive === 1 ? 'Deactivate' : 'Activate'}
@@ -309,7 +314,7 @@ export const UserManagementView: React.FC<Props> = ({ currentUser, onToast }) =>
                         <button
                           onClick={() => handleDeleteUser(u)}
                           title="Delete user"
-                          className="p-1.5 text-neutral-400 hover:text-rose-400 hover:bg-neutral-800 rounded transition-colors"
+                          className="p-1.5 text-neutral-400 hover:text-rose-400 hover:bg-neutral-800 rounded-lg transition-colors form-pressable cursor-pointer"
                         >
                           <Trash2 className="w-4 h-4" />
                         </button>

@@ -187,12 +187,15 @@ export const CaseDetailModal: React.FC<Props> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-5 bg-black/80 backdrop-blur-sm animate-fadeIn">
-      <div className="bg-neutral-900 border border-neutral-700 rounded-xl shadow-2xl max-w-4xl w-full flex flex-col max-h-[92vh] overflow-hidden">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-5 bg-black/80 backdrop-blur-md animate-modal-backdrop">
+      <div className="bg-gradient-to-b from-neutral-900 to-neutral-950 border border-neutral-700/80 rounded-2xl shadow-2xl shadow-black/80 max-w-4xl w-full flex flex-col max-h-[92vh] overflow-hidden animate-modal-card relative">
+        {/* Top Accent Line */}
+        <div className="absolute top-0 inset-x-0 h-[2px] bg-gradient-to-r from-amber-600 via-amber-400 to-amber-600" />
+
         {/* Modal Header */}
-        <div className="px-5 py-3 border-b border-neutral-800 bg-neutral-950 flex items-center justify-between">
+        <div className="px-5 py-3.5 border-b border-neutral-800 bg-neutral-950/90 backdrop-blur-sm flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <span className="font-mono text-xs text-amber-500 bg-amber-950/60 border border-amber-800/60 px-2 py-0.5 rounded">
+            <span className="font-mono text-xs text-amber-400 bg-amber-950/80 border border-amber-800/80 px-2.5 py-0.5 rounded-full font-semibold">
               Serial #{caseData?.SerialNo}
             </span>
             <div>
@@ -212,7 +215,7 @@ export const CaseDetailModal: React.FC<Props> = ({
               <>
                 <button
                   onClick={() => onPrintPreview(`Case #${caseData.CaseNumber} Dossier`, [caseData])}
-                  className="flex items-center gap-1.5 px-2.5 py-1 bg-neutral-800 hover:bg-neutral-700 text-neutral-200 text-xs rounded border border-neutral-700 transition-colors"
+                  className="flex items-center gap-1.5 px-3 py-1.5 bg-neutral-800/90 hover:bg-neutral-750 text-neutral-200 text-xs rounded-lg border border-neutral-700/80 transition-colors form-pressable cursor-pointer"
                 >
                   <Printer className="w-3.5 h-3.5" />
                   <span className="hidden sm:inline">Print Record</span>
@@ -222,7 +225,7 @@ export const CaseDetailModal: React.FC<Props> = ({
                     onClose();
                     onEditCase(caseData);
                   }}
-                  className="flex items-center gap-1.5 px-2.5 py-1 bg-neutral-800 hover:bg-neutral-700 text-amber-300 text-xs rounded border border-neutral-700 transition-colors"
+                  className="flex items-center gap-1.5 px-3 py-1.5 bg-neutral-800/90 hover:bg-neutral-750 text-amber-300 text-xs rounded-lg border border-neutral-700/80 transition-colors form-pressable cursor-pointer"
                 >
                   <Edit2 className="w-3.5 h-3.5" />
                   <span className="hidden sm:inline">Edit Case</span>
@@ -232,7 +235,7 @@ export const CaseDetailModal: React.FC<Props> = ({
                     onClose();
                     onDeleteCase(caseData);
                   }}
-                  className="p-1 text-neutral-400 hover:text-rose-400 hover:bg-neutral-800 rounded transition-colors"
+                  className="p-1.5 text-neutral-400 hover:text-rose-400 hover:bg-neutral-800 rounded-lg transition-colors form-pressable cursor-pointer"
                   title="Delete Case"
                 >
                   <Trash2 className="w-4 h-4" />
@@ -241,7 +244,7 @@ export const CaseDetailModal: React.FC<Props> = ({
             )}
             <button
               onClick={onClose}
-              className="p-1 text-neutral-400 hover:text-white rounded hover:bg-neutral-800 transition-colors"
+              className="p-1.5 text-neutral-400 hover:text-white rounded-full hover:bg-neutral-800 transition-colors form-pressable cursor-pointer"
             >
               <X className="w-4 h-4" />
             </button>
@@ -325,50 +328,56 @@ export const CaseDetailModal: React.FC<Props> = ({
 
                 {/* Add Proceeding Form */}
                 {showAddProceeding && (
-                  <form onSubmit={handleAddProceeding} className="bg-neutral-950 border border-amber-600/40 p-4 rounded-lg space-y-3 animate-fadeIn">
-                    <h4 className="font-semibold text-amber-300 text-xs">Record Today's Proceedings & Bench Directives</h4>
+                  <form onSubmit={handleAddProceeding} className="bg-gradient-to-b from-neutral-900 to-neutral-950 border border-amber-600/50 p-4 rounded-xl space-y-3.5 shadow-lg animate-slide-down">
+                    <h4 className="font-semibold text-amber-300 text-xs flex items-center gap-1.5">
+                      <Clock className="w-3.5 h-3.5 text-amber-400" />
+                      <span>Record Today's Proceedings & Bench Directives</span>
+                    </h4>
 
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                       <div>
-                        <label className="block text-neutral-400 text-[11px] mb-1">Hearing Date *</label>
+                        <label className="block text-neutral-300 text-[11px] font-medium mb-1">Hearing Date *</label>
                         <input
                           type="date"
                           value={hearingDateIso}
                           onChange={(e) => setHearingDateIso(e.target.value)}
                           required
-                          className="w-full h-8 px-2 bg-neutral-900 border border-neutral-700 rounded text-neutral-200 text-xs"
+                          className="form-input-modern w-full h-8.5 px-2.5 bg-neutral-950/80 border border-neutral-700/80 rounded-lg text-neutral-200 text-xs focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/25 shadow-inner"
                         />
                       </div>
                       <div>
-                        <label className="block text-neutral-400 text-[11px] mb-1">Next Dairy Date</label>
+                        <label className="block text-neutral-300 text-[11px] font-medium mb-1">Next Dairy Date</label>
                         <input
                           type="date"
                           value={nextHearingDateIso}
                           onChange={(e) => setNextHearingDateIso(e.target.value)}
-                          className="w-full h-8 px-2 bg-neutral-900 border border-neutral-700 rounded text-neutral-200 text-xs"
+                          className="form-input-modern w-full h-8.5 px-2.5 bg-neutral-950/80 border border-neutral-700/80 rounded-lg text-neutral-200 text-xs focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/25 shadow-inner"
                         />
-                        <span className="text-[10px] text-amber-400 mt-0.5 block">
+                        <span className="text-[10px] text-amber-400 mt-1 block">
                           Auto-reschedules Case Dairy Date
                         </span>
                       </div>
                       <div>
-                        <label className="block text-neutral-400 text-[11px] mb-1">Update Result</label>
+                        <label className="block text-neutral-300 text-[11px] font-medium mb-1">Update Result</label>
                         <select
                           value={updateResult}
                           onChange={(e) => setUpdateResult(e.target.value)}
-                          className="w-full h-8 px-2 bg-neutral-900 border border-neutral-700 rounded text-neutral-200 text-xs"
+                          className="form-input-modern w-full h-8.5 px-2.5 bg-neutral-950/80 border border-neutral-700/80 rounded-lg text-neutral-200 text-xs focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/25 shadow-inner cursor-pointer"
                         >
                           {resultsList.length === 0 ? (
                             <>
                               <option value="Pending">Pending</option>
-                              <option value="Adjourned">Adjourned</option>
+                              <option value="Absolute">Absolute</option>
+                              <option value="Discharged">Discharged</option>
+                              <option value="Disposed of">Disposed of</option>
                               <option value="Disposed">Disposed</option>
                               <option value="Allowed">Allowed</option>
                               <option value="Dismissed">Dismissed</option>
-                              <option value="Reserved">Reserved</option>
+                              <option value="Adjourned">Adjourned</option>
                               <option value="For Judgement">For Judgement</option>
                               <option value="Withdrawn">Withdrawn</option>
-                              <option value="Other">Other</option>
+                              <option value="Reserved">Reserved</option>
+                              <option value="Others">Others</option>
                             </>
                           ) : (
                             <>
@@ -387,40 +396,40 @@ export const CaseDetailModal: React.FC<Props> = ({
                     </div>
 
                     <div>
-                      <label className="block text-neutral-400 text-[11px] mb-1">Business Recorded (Daily Order / Summary) *</label>
+                      <label className="block text-neutral-300 text-[11px] font-medium mb-1">Business Recorded (Daily Order / Summary) *</label>
                       <textarea
                         rows={2}
                         value={businessRecorded}
                         onChange={(e) => setBusinessRecorded(e.target.value)}
                         placeholder="e.g. Accused present on bail. PW-1 examined in chief and cross examined. Put up for PW-2."
                         required
-                        className="w-full p-2 bg-neutral-900 border border-neutral-700 rounded text-neutral-200 text-xs"
+                        className="form-input-modern w-full p-2.5 bg-neutral-950/80 border border-neutral-700/80 rounded-lg text-neutral-200 text-xs focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/25 shadow-inner"
                       />
                     </div>
 
                     <div>
-                      <label className="block text-neutral-400 text-[11px] mb-1">Judge / Bench Notes (Confidential)</label>
+                      <label className="block text-neutral-300 text-[11px] font-medium mb-1">Judge / Bench Notes (Confidential)</label>
                       <textarea
                         rows={2}
                         value={benchNotes}
                         onChange={(e) => setBenchNotes(e.target.value)}
                         placeholder="e.g. Demeanor of witness noted. Prosecution requested final opportunity."
-                        className="w-full p-2 bg-neutral-900 border border-neutral-700 rounded text-neutral-200 text-xs font-mono"
+                        className="form-input-modern w-full p-2.5 bg-neutral-950/80 border border-neutral-700/80 rounded-lg text-neutral-200 text-xs font-mono focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/25 shadow-inner"
                       />
                     </div>
 
-                    <div className="flex justify-end gap-2 pt-1">
+                    <div className="flex justify-end gap-2 pt-1 border-t border-neutral-800">
                       <button
                         type="button"
                         onClick={() => setShowAddProceeding(false)}
-                        className="px-3 py-1 bg-neutral-800 text-neutral-300 rounded hover:bg-neutral-700 text-xs"
+                        className="px-3.5 py-1.5 bg-neutral-800/90 hover:bg-neutral-750 text-neutral-300 rounded-lg text-xs form-pressable cursor-pointer"
                       >
                         Cancel
                       </button>
                       <button
                         type="submit"
                         disabled={savingProceeding}
-                        className="px-4 py-1 bg-amber-600 text-neutral-950 font-semibold rounded hover:bg-amber-500 disabled:opacity-50 text-xs"
+                        className="px-4 py-1.5 bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-500 hover:to-amber-400 text-neutral-950 font-bold rounded-lg disabled:opacity-50 text-xs shadow-md shadow-amber-900/30 form-pressable cursor-pointer"
                       >
                         {savingProceeding ? 'Recording...' : 'Commit Proceeding'}
                       </button>
@@ -491,25 +500,30 @@ export const CaseDetailModal: React.FC<Props> = ({
 
                 {/* Upload Form */}
                 {showUploadDoc && (
-                  <form onSubmit={handleFileUpload} className="bg-neutral-950 border border-neutral-800 p-4 rounded-lg space-y-3 animate-fadeIn">
+                  <form onSubmit={handleFileUpload} className="bg-gradient-to-b from-neutral-900 to-neutral-950 border border-neutral-700/80 p-4 rounded-xl space-y-3.5 shadow-lg animate-slide-down">
+                    <h4 className="font-semibold text-sky-300 text-xs flex items-center gap-1.5">
+                      <Upload className="w-3.5 h-3.5 text-sky-400" />
+                      <span>Upload & Link Court Document</span>
+                    </h4>
+
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                       <div>
-                        <label className="block text-neutral-400 text-[11px] mb-1">Document Title *</label>
+                        <label className="block text-neutral-300 text-[11px] font-medium mb-1">Document Title *</label>
                         <input
                           type="text"
                           value={docTitle}
                           onChange={(e) => setDocTitle(e.target.value)}
                           placeholder="e.g. Order Sheet, Charge Sheet, Bail Application"
                           required
-                          className="w-full h-8 px-2 bg-neutral-900 border border-neutral-700 rounded text-neutral-200 text-xs"
+                          className="form-input-modern w-full h-8.5 px-2.5 bg-neutral-950/80 border border-neutral-700/80 rounded-lg text-neutral-200 text-xs focus:outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-500/25 shadow-inner"
                         />
                       </div>
                       <div>
-                        <label className="block text-neutral-400 text-[11px] mb-1">Document Category</label>
+                        <label className="block text-neutral-300 text-[11px] font-medium mb-1">Document Category</label>
                         <select
                           value={docType}
                           onChange={(e) => setDocType(e.target.value)}
-                          className="w-full h-8 px-2 bg-neutral-900 border border-neutral-700 rounded text-neutral-200 text-xs"
+                          className="form-input-modern w-full h-8.5 px-2.5 bg-neutral-950/80 border border-neutral-700/80 rounded-lg text-neutral-200 text-xs focus:outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-500/25 shadow-inner cursor-pointer"
                         >
                           <option value="Order Sheet">Order Sheet</option>
                           <option value="Petition / Complaint">Petition / Complaint</option>
@@ -523,27 +537,27 @@ export const CaseDetailModal: React.FC<Props> = ({
                     </div>
 
                     <div>
-                      <label className="block text-neutral-400 text-[11px] mb-1">Select File (PDF, Word, Image, Scan)</label>
+                      <label className="block text-neutral-300 text-[11px] font-medium mb-1">Select File (PDF, Word, Image, Scan)</label>
                       <input
                         type="file"
                         onChange={(e) => setUploadFile(e.target.files?.[0] || null)}
                         required
-                        className="w-full text-xs text-neutral-400 file:mr-3 file:py-1 file:px-3 file:rounded file:border-0 file:text-xs file:bg-neutral-800 file:text-neutral-200 hover:file:bg-neutral-700"
+                        className="w-full text-xs text-neutral-400 file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:bg-neutral-800 file:text-neutral-200 hover:file:bg-neutral-700 form-pressable cursor-pointer"
                       />
                     </div>
 
-                    <div className="flex justify-end gap-2 pt-1">
+                    <div className="flex justify-end gap-2 pt-1 border-t border-neutral-800">
                       <button
                         type="button"
                         onClick={() => setShowUploadDoc(false)}
-                        className="px-3 py-1 bg-neutral-800 text-neutral-300 rounded hover:bg-neutral-700 text-xs"
+                        className="px-3.5 py-1.5 bg-neutral-800/90 hover:bg-neutral-750 text-neutral-300 rounded-lg text-xs form-pressable cursor-pointer"
                       >
                         Cancel
                       </button>
                       <button
                         type="submit"
                         disabled={uploadingDoc}
-                        className="px-4 py-1 bg-sky-600 text-white font-semibold rounded hover:bg-sky-500 disabled:opacity-50 text-xs"
+                        className="px-4 py-1.5 bg-gradient-to-r from-sky-600 to-sky-500 hover:from-sky-500 hover:to-sky-400 text-white font-bold rounded-lg disabled:opacity-50 text-xs shadow-md shadow-sky-900/30 form-pressable cursor-pointer"
                       >
                         {uploadingDoc ? 'Uploading...' : 'Save & Encrypt'}
                       </button>

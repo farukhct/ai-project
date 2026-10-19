@@ -15,7 +15,7 @@ interface Props {
 
 const VIEW_TITLES: Record<string, string> = {
   'dashboard': 'Bench Overview & Diary Status',
-  'new-case': 'Record New Court Case Entry',
+  'new-case': 'Add New Court Diary Entry',
   'case-list': 'Comprehensive Case Register',
   'case-details': 'Case Proceedings & Records Dossier',
   'advanced-search': 'Advanced Multi-Parameter Query',

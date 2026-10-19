@@ -1,36 +1,85 @@
 @import "tailwindcss";
 
 :root,
+html.light,
+body.light,
+.light {
+  color-scheme: light;
+
+  /* Bangladesh Government Official Portal Theme */
+  --neutral-950: #ffffff;
+  --neutral-925: #f0f4f8;
+  --neutral-900: #ffffff;
+  --neutral-850: #f8fafc;
+  --neutral-800: #e2e8f0;
+  --neutral-750: #cbd5e1;
+  --neutral-700: #94a3b8;
+  --neutral-600: #64748b;
+  --neutral-500: #475569;
+  --neutral-400: #334155;
+  --neutral-300: #1e293b;
+  --neutral-200: #0f172a;
+  --neutral-100: #020617;
+  --neutral-50: #000000;
+
+  /* Primary Brand Color: Government Forest Green (#006A4E) */
+  --amber-950: #ecfdf5;
+  --amber-800: #004d39;
+  --amber-400: #006a4e;
+  --amber-300: #006a4e;
+  --amber-200: #004332;
+
+  --emerald-950: #ecfdf5;
+  --emerald-800: #006a4e;
+  --emerald-400: #059669;
+  --emerald-300: #10b981;
+
+  --rose-950: #fff1f2;
+  --rose-800: #be123c;
+  --rose-400: #d92534;
+  --rose-300: #9f1239;
+
+  --sky-950: #f0f9ff;
+  --sky-800: #0284c7;
+  --sky-400: #006a4e;
+  --sky-300: #0a2540;
+
+  --purple-950: #f8fafc;
+  --purple-800: #0a2540;
+  --purple-400: #006a4e;
+  --purple-300: #004d39;
+}
+
 html.dark,
 body.dark,
 .dark {
   color-scheme: dark;
 
-  /* Neutral Shades - Dark Theme */
-  --neutral-950: #09090b;
-  --neutral-925: #111114;
-  --neutral-900: #18181b;
-  --neutral-850: #202024;
-  --neutral-800: #27272a;
-  --neutral-750: #323238;
-  --neutral-700: #3f3f46;
-  --neutral-600: #52525b;
-  --neutral-500: #71717a;
-  --neutral-400: #a1a1aa;
-  --neutral-300: #d4d4d8;
-  --neutral-200: #e4e4e7;
-  --neutral-100: #f4f4f5;
-  --neutral-50: #fafafa;
+  /* Dark Government Forest & Navy Theme */
+  --neutral-950: #071612;
+  --neutral-925: #0b1f1a;
+  --neutral-900: #0e2922;
+  --neutral-850: #13342b;
+  --neutral-800: #1b4338;
+  --neutral-750: #26594b;
+  --neutral-700: #397664;
+  --neutral-600: #559983;
+  --neutral-500: #82b9a7;
+  --neutral-400: #b5d8cc;
+  --neutral-300: #dcf0e8;
+  --neutral-200: #f0faf6;
+  --neutral-100: #ffffff;
+  --neutral-50: #ffffff;
 
-  /* Accent Badges - Dark Theme */
-  --amber-950: #451a03;
-  --amber-800: #92400e;
-  --amber-400: #fbbf24;
-  --amber-300: #fcd34d;
-  --amber-200: #fde68a;
+  /* Accent Badges - Government Forest Theme */
+  --amber-950: #022c22;
+  --amber-800: #006a4e;
+  --amber-400: #34d399;
+  --amber-300: #6ee7b7;
+  --amber-200: #a7f3d0;
 
   --emerald-950: #022c22;
-  --emerald-800: #065f46;
+  --emerald-800: #006a4e;
   --emerald-400: #34d399;
   --emerald-300: #6ee7b7;
 
@@ -44,59 +93,10 @@ body.dark,
   --sky-400: #38bdf8;
   --sky-300: #7dd3fc;
 
-  --purple-950: #3b0764;
-  --purple-800: #581c87;
-  --purple-400: #c084fc;
-  --purple-300: #d8b4fe;
-}
-
-html.light,
-body.light,
-.light {
-  color-scheme: light;
-
-  /* Neutral Shades - Inverted Light Theme */
-  --neutral-950: #ffffff;
-  --neutral-925: #f8fafc;
-  --neutral-900: #ffffff;
-  --neutral-850: #f1f5f9;
-  --neutral-800: #e2e8f0;
-  --neutral-750: #cbd5e1;
-  --neutral-700: #cbd5e1;
-  --neutral-600: #94a3b8;
-  --neutral-500: #64748b;
-  --neutral-400: #475569;
-  --neutral-300: #334155;
-  --neutral-200: #1e293b;
-  --neutral-100: #0f172a;
-  --neutral-50: #020617;
-
-  /* Accent Badges - Light Theme */
-  --amber-950: #fef3c7;
-  --amber-800: #f59e0b;
-  --amber-400: #b45309;
-  --amber-300: #92400e;
-  --amber-200: #78350f;
-
-  --emerald-950: #d1fae5;
-  --emerald-800: #10b981;
-  --emerald-400: #047857;
-  --emerald-300: #065f46;
-
-  --rose-950: #ffe4e6;
-  --rose-800: #f43f5e;
-  --rose-400: #be123c;
-  --rose-300: #9f1239;
-
-  --sky-950: #e0f2fe;
-  --sky-800: #0ea5e9;
-  --sky-400: #0369a1;
-  --sky-300: #075985;
-
-  --purple-950: #f3e8ff;
-  --purple-800: #a855f7;
-  --purple-400: #7e22ce;
-  --purple-300: #581c87;
+  --purple-950: #0a2540;
+  --purple-800: #006a4e;
+  --purple-400: #34d399;
+  --purple-300: #6ee7b7;
 }
 
 @theme {
@@ -216,3 +216,96 @@ html.light textarea::placeholder {
 ::-webkit-scrollbar-thumb:hover {
   background: rgba(160, 160, 160, 0.45);
 }
+
+/* Modern Form & Modal Animations */
+@keyframes modalBackdropFadeIn {
+  0% {
+    opacity: 0;
+    backdrop-filter: blur(0px);
+  }
+  100% {
+    opacity: 1;
+    backdrop-filter: blur(8px);
+  }
+}
+
+@keyframes modalCardPop {
+  0% {
+    opacity: 0;
+    transform: scale(0.96) translateY(12px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+@keyframes slideDownFade {
+  0% {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideUpFade {
+  0% {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes subtleGlowPulse {
+  0%, 100% {
+    box-shadow: 0 0 15px -3px rgba(245, 158, 11, 0.15);
+  }
+  50% {
+    box-shadow: 0 0 25px 2px rgba(245, 158, 11, 0.3);
+  }
+}
+
+.animate-modal-backdrop {
+  animation: modalBackdropFadeIn 0.22s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-modal-card {
+  animation: modalCardPop 0.26s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  will-change: transform, opacity;
+}
+
+.animate-slide-down {
+  animation: slideDownFade 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-slide-up {
+  animation: slideUpFade 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.glow-amber-subtle {
+  animation: subtleGlowPulse 4s infinite ease-in-out;
+}
+
+/* Modern Form Field Styling */
+.form-input-modern {
+  transition: border-color 0.18s ease-out, box-shadow 0.18s ease-out, background-color 0.18s ease-out, transform 0.15s ease-out;
+}
+
+.form-input-modern:focus {
+  transform: translateY(-1px);
+}
+
+.form-pressable {
+  transition: transform 0.12s ease-out, background-color 0.15s ease-out, border-color 0.15s ease-out, box-shadow 0.15s ease-out;
+}
+
+.form-pressable:active {
+  transform: scale(0.97);
+}
+
