@@ -3,38 +3,47 @@ import fs from 'fs';
 import path from 'path';
 
 let dbInstance: Database | null = null;
+let cachedSqlEngine: any = null;
 const dbPath = path.resolve(process.cwd(), 'CourtDairy.db');
 
-export async function getDb(): Promise<Database> {
-  if (dbInstance) return dbInstance;
-
-  const SQL = await initSqlJs({
+export async function getSqlEngine() {
+  if (cachedSqlEngine) return cachedSqlEngine;
+  cachedSqlEngine = await initSqlJs({
     locateFile: (file) => {
       const p = path.resolve(process.cwd(), 'node_modules/sql.js/dist', file);
       return fs.existsSync(p) ? p : file;
     }
   });
+  return cachedSqlEngine;
+}
+
+export async function getDb(): Promise<Database> {
+  if (dbInstance) return dbInstance;
+
+  const SQL = await getSqlEngine();
+  let instance: Database;
 
   if (fs.existsSync(dbPath)) {
     try {
       const fileBuffer = fs.readFileSync(dbPath);
-      dbInstance = new SQL.Database(fileBuffer);
+      instance = new SQL.Database(fileBuffer);
     } catch (err) {
       console.error('Error reading existing CourtDairy.db, creating fresh instance:', err);
-      dbInstance = new SQL.Database();
+      instance = new SQL.Database();
     }
   } else {
-    dbInstance = new SQL.Database();
+    instance = new SQL.Database();
   }
 
   // Enable foreign keys
-  dbInstance.run('PRAGMA foreign_keys = ON;');
+  instance.run('PRAGMA foreign_keys = ON;');
 
   // Initialize schema
-  initSchema(dbInstance);
+  initSchema(instance);
+  dbInstance = instance;
   saveDb();
 
-  return dbInstance;
+  return instance;
 }
 
 export function saveDb(): void {
@@ -48,17 +57,22 @@ export function saveDb(): void {
   }
 }
 
-export function reloadDbFromBuffer(buffer: Buffer): void {
+export async function reloadDbFromBuffer(buffer: Buffer): Promise<Database> {
+  const SQL = await getSqlEngine();
+
   if (dbInstance) {
     try {
       dbInstance.close();
     } catch {
       // ignore
     }
+    dbInstance = null;
   }
-  // Make a backup copy of existing db if exists
+
+  // Create an automatic safety backup copy of the existing database on disk
   if (fs.existsSync(dbPath)) {
-    const backupPath = path.resolve(process.cwd(), `CourtDairy_PreRestore_${Date.now()}.db`);
+    const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+    const backupPath = path.resolve(process.cwd(), `CourtDairy_PreRestore_${timestamp}.db`);
     try {
       fs.copyFileSync(dbPath, backupPath);
     } catch (e) {
@@ -66,8 +80,67 @@ export function reloadDbFromBuffer(buffer: Buffer): void {
     }
   }
 
+  // Write new restored file
   fs.writeFileSync(dbPath, buffer);
-  dbInstance = null; // will reload on next getDb()
+
+  // Instantly instantiate new database
+  const instance: Database = new SQL.Database(buffer);
+  instance.run('PRAGMA foreign_keys = ON;');
+  initSchema(instance);
+  dbInstance = instance;
+  saveDb();
+
+  return instance;
+}
+
+/**
+ * One-Click Database Reset
+ * Resets case records, proceedings, documents, and sequences while preserving
+ * active user accounts and system configuration. An automatic pre-reset safety
+ * backup is created before clearing data.
+ */
+export async function resetDatabase(currentUsername: string): Promise<{ backupFile: string }> {
+  const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+  const backupFileName = `CourtDairy_PreReset_${timestamp}.db`;
+  const backupPath = path.resolve(process.cwd(), backupFileName);
+
+  // 1. Create safety backup of existing db file
+  if (fs.existsSync(dbPath)) {
+    try {
+      fs.copyFileSync(dbPath, backupPath);
+    } catch (e) {
+      console.warn('Could not create pre-reset safety backup:', e);
+    }
+  }
+
+  const db = await getDb();
+
+  // 2. Wipe case data, proceedings, documents, and reset autoincrement sequences
+  db.run('PRAGMA foreign_keys = OFF;');
+  db.run(`
+    DELETE FROM CaseDocuments;
+    DELETE FROM CaseProceedings;
+    DELETE FROM CourtDiary;
+    DELETE FROM AuditLogs;
+    DELETE FROM sqlite_sequence WHERE name IN ('CourtDiary', 'CaseProceedings', 'CaseDocuments', 'AuditLogs');
+  `);
+  db.run('PRAGMA foreign_keys = ON;');
+
+  // 3. Ensure standard schemas and results exist
+  initSchema(db);
+
+  // 4. Record audit entry
+  logAudit(
+    db,
+    'RESET_DATABASE',
+    'System',
+    null,
+    `Database reset to clean state by ${currentUsername}. Safety backup: ${backupFileName}`,
+    currentUsername
+  );
+
+  saveDb();
+  return { backupFile: backupFileName };
 }
 
 function initSchema(db: Database) {

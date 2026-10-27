@@ -252,7 +252,7 @@ export const CaseListView: React.FC<Props> = ({
 
           <button
             onClick={() => onPrintPreview('Court Diary Case Register', filteredCases)}
-            className="flex items-center gap-1.5 bg-neutral-800 hover:bg-neutral-700 text-neutral-200 px-3 py-1.5 rounded text-xs font-medium border border-neutral-700 transition-colors"
+            className="flex items-center gap-1.5 bg-neutral-800 hover:bg-neutral-700 text-neutral-200 px-3 py-1.5 rounded-lg text-xs font-medium border border-neutral-700 transition-all shadow-xs active:scale-95"
           >
             <Printer className="w-3.5 h-3.5" />
             <span className="hidden sm:inline">Print View</span>
@@ -260,7 +260,7 @@ export const CaseListView: React.FC<Props> = ({
 
           <button
             onClick={onOpenImport}
-            className="flex items-center gap-1.5 bg-neutral-800 hover:bg-neutral-700 text-neutral-200 px-3 py-1.5 rounded text-xs font-medium border border-neutral-700 transition-colors"
+            className="flex items-center gap-1.5 bg-neutral-800 hover:bg-neutral-700 text-neutral-200 px-3 py-1.5 rounded-lg text-xs font-medium border border-neutral-700 transition-all shadow-xs active:scale-95"
           >
             <Upload className="w-3.5 h-3.5" />
             <span className="hidden sm:inline">Import</span>
@@ -268,7 +268,7 @@ export const CaseListView: React.FC<Props> = ({
 
           <button
             onClick={onNewCase}
-            className="flex items-center gap-1.5 bg-amber-600 hover:bg-amber-500 active:bg-amber-700 text-neutral-950 px-3.5 py-1.5 rounded text-xs font-bold shadow-sm transition-colors cursor-pointer"
+            className="btn-gov-primary flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-bold shadow-md transition-all cursor-pointer whitespace-nowrap active:scale-95"
           >
             <Plus className="w-4 h-4" />
             <span>New Case</span>

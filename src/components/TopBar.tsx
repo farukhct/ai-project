@@ -1,5 +1,5 @@
 import React from 'react';
-import { Search, Plus, RefreshCw, Moon, Sun, Printer, Shield } from 'lucide-react';
+import { Search, Plus, RefreshCw, Moon, Sun, Printer, Shield, FilePlus } from 'lucide-react';
 
 interface Props {
   currentView: string;
@@ -51,17 +51,17 @@ export const TopBar: React.FC<Props> = ({
   };
 
   return (
-    <header className="h-13 bg-neutral-900 border-b border-neutral-800 px-4 flex items-center justify-between gap-4 shrink-0 select-none">
+    <header className="h-14 bg-neutral-900 border-b border-neutral-800 px-3 sm:px-5 flex items-center justify-between gap-2 sm:gap-4 shrink-0 select-none shadow-xs">
       {/* Zone 1: Breadcrumb & Title */}
       <div className="flex items-center gap-2 min-w-0">
-        <span className="text-xs font-mono text-neutral-400 hidden sm:inline">Court Dairy /</span>
-        <h1 className="text-sm font-semibold text-neutral-100 truncate tracking-tight">
+        <span className="text-[11px] font-semibold text-emerald-600 hidden md:inline">Court Dairy /</span>
+        <h1 className="text-xs sm:text-sm font-bold text-neutral-100 truncate tracking-tight">
           {title}
         </h1>
       </div>
 
       {/* Zone 2: Global Search */}
-      <div className="flex-1 max-w-md mx-2">
+      <div className="flex-1 max-w-xs sm:max-w-md mx-1 sm:mx-3">
         <div className="relative">
           <Search className="w-3.5 h-3.5 text-neutral-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
           <input
@@ -69,8 +69,8 @@ export const TopBar: React.FC<Props> = ({
             value={globalSearch}
             onChange={(e) => onGlobalSearchChange(e.target.value)}
             onKeyDown={handleKeyDown}
-            placeholder="Search anything (Serial, Case No, Result, Date, Remarks)..."
-            className="w-full h-8 pl-8 pr-8 bg-neutral-950 border border-neutral-700/80 rounded-md text-xs text-neutral-200 placeholder-neutral-500 focus:outline-none focus:border-amber-600 focus:ring-1 focus:ring-amber-600/50 transition-colors"
+            placeholder="Search Serial, Case No, Result..."
+            className="w-full h-8.5 pl-8 pr-8 bg-neutral-950 border border-neutral-700/80 rounded-lg text-xs text-neutral-200 placeholder-neutral-400 focus:outline-none focus:border-emerald-600 focus:ring-2 focus:ring-emerald-600/30 transition-all shadow-2xs"
           />
           {globalSearch && (
             <button
@@ -78,7 +78,7 @@ export const TopBar: React.FC<Props> = ({
                 onGlobalSearchChange('');
                 onGlobalSearchSubmit();
               }}
-              className="absolute right-2.5 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-neutral-200 text-xs font-mono"
+              className="absolute right-2.5 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-neutral-100 text-xs font-mono p-0.5"
             >
               ×
             </button>
@@ -86,12 +86,12 @@ export const TopBar: React.FC<Props> = ({
         </div>
       </div>
 
-      {/* Zone 3: Primary Actions */}
-      <div className="flex items-center gap-2 shrink-0">
+      {/* Zone 3: Primary Actions (Animated & Responsive) */}
+      <div className="flex items-center gap-1.5 sm:gap-2.5 shrink-0">
         <button
           onClick={onRefresh}
           title="Refresh Data (F5)"
-          className="p-1.5 text-neutral-400 hover:text-neutral-200 hover:bg-neutral-800 rounded transition-colors"
+          className="p-2 text-neutral-400 hover:text-emerald-400 hover:bg-neutral-800/80 rounded-lg transition-all active:scale-95"
         >
           <RefreshCw className="w-4 h-4" />
         </button>
@@ -99,7 +99,7 @@ export const TopBar: React.FC<Props> = ({
         <button
           onClick={onPrintCurrent}
           title="Print Current View (Ctrl+P)"
-          className="p-1.5 text-neutral-400 hover:text-neutral-200 hover:bg-neutral-800 rounded transition-colors hidden sm:inline-flex"
+          className="p-2 text-neutral-400 hover:text-neutral-100 hover:bg-neutral-800/80 rounded-lg transition-all active:scale-95 hidden sm:inline-flex"
         >
           <Printer className="w-4 h-4" />
         </button>
@@ -107,17 +107,18 @@ export const TopBar: React.FC<Props> = ({
         <button
           onClick={onToggleTheme}
           title="Toggle Light/Dark Theme"
-          className="p-1.5 text-neutral-400 hover:text-neutral-200 hover:bg-neutral-800 rounded transition-colors"
+          className="p-2 text-neutral-400 hover:text-amber-400 hover:bg-neutral-800/80 rounded-lg transition-all active:scale-95"
         >
           {isDark ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
         </button>
 
+        {/* Primary Action Button (eTax Bangladesh Emerald Gradient, Animated & Responsive) */}
         <button
           onClick={onNewCase}
-          className="flex items-center gap-1.5 bg-amber-600 hover:bg-amber-500 active:bg-amber-700 text-neutral-950 px-3 py-1.5 rounded-md text-xs font-semibold shadow-sm transition-colors whitespace-nowrap"
+          className="btn-gov-primary flex items-center gap-1.5 px-3 sm:px-4 py-2 rounded-lg text-xs font-bold shadow-md cursor-pointer whitespace-nowrap active:scale-95 transition-all"
         >
-          <Plus className="w-3.5 h-3.5" />
-          <span>New Case</span>
+          <Plus className="w-4 h-4 shrink-0" />
+          <span className="hidden xs:inline sm:inline">New Case</span>
         </button>
       </div>
     </header>

@@ -1,4 +1,5 @@
 import React from 'react';
+import { PhoneCall, ShieldCheck, Globe } from 'lucide-react';
 
 /**
  * Official National Emblem of Bangladesh Vector SVG
@@ -91,7 +92,7 @@ export const BangladeshGovEmblem: React.FC<{ className?: string; size?: number }
         fill="#F59E0B"
       />
 
-      {/* Four Stars (Two Left, Two Right) representing the 4 Founding Constitutional Principles */}
+      {/* Four Stars (Two Left, Two Right) representing Constitutional Principles */}
       <polygon points="41,25 43,28 47,28 44,30 45,34 41,31 38,34 39,30 36,28 40,28" fill="#F59E0B" />
       <polygon points="32,35 34,38 37,38 34,40 35,43 32,41 29,43 30,40 27,38 31,38" fill="#F59E0B" />
       <polygon points="79,25 81,28 85,28 82,30 83,34 79,31 76,34 77,30 74,28 78,28" fill="#F59E0B" />
@@ -107,7 +108,7 @@ export const BangladeshGovEmblem: React.FC<{ className?: string; size?: number }
 };
 
 /**
- * Official Court Diary Logo Lockup
+ * Official Court Diary Logo Lockup in e-Gov Portal Style
  */
 export const CourtLogo: React.FC<{ className?: string; subtitle?: boolean }> = ({
   className = '',
@@ -133,27 +134,38 @@ export const CourtLogo: React.FC<{ className?: string; subtitle?: boolean }> = (
 };
 
 /**
- * Official Government Header Banner styled identically to the government portal
+ * Official Government Header Banner styled identically to https://etaxnbr.gov.bd/#/auth/sign-in
  */
-export const GovHeader: React.FC<{ rightContent?: React.ReactNode }> = ({ rightContent }) => {
+export const GovHeader: React.FC<{
+  rightContent?: React.ReactNode;
+  activeLang?: 'en' | 'bn';
+  onToggleLang?: (lang: 'en' | 'bn') => void;
+}> = ({
+  rightContent,
+  activeLang = 'en',
+  onToggleLang
+}) => {
   return (
     <header className="bg-white border-b border-slate-200 select-none shadow-xs">
-      {/* Top Thin Green Strip */}
-      <div className="h-1 bg-gradient-to-r from-[#006A4E] via-[#008763] to-[#006A4E]" />
+      {/* Top Thin Green & Gold Gradient Strip */}
+      <div className="h-1 bg-gradient-to-r from-[#006A4E] via-[#059669] to-[#C59B27]" />
 
-      <div className="max-w-7xl mx-auto px-4 py-2.5 sm:py-3 flex items-center justify-between gap-4">
-        {/* Brand Lockup */}
+      <div className="max-w-7xl mx-auto px-3 sm:px-6 py-2 sm:py-3 flex flex-wrap items-center justify-between gap-3">
+        {/* Brand Lockup: Official Bangladesh Government & Judicial Portal */}
         <div className="flex items-center gap-3 min-w-0">
-          <BangladeshGovEmblem className="w-12 h-12 sm:w-14 sm:h-14 shrink-0 drop-shadow-xs" />
+          <BangladeshGovEmblem className="w-11 h-11 sm:w-14 sm:h-14 shrink-0 drop-shadow-xs" />
           <div className="min-w-0">
-            <div className="text-base sm:text-lg font-bold text-[#006A4E] leading-tight flex items-center gap-2">
-              <span className="font-extrabold tracking-tight">Court<span className="text-[#D92534]">Diary</span></span>
-              <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-emerald-100 text-emerald-800 border border-emerald-300 tracking-wide uppercase">
-                JUDICIAL
+            <div className="text-[11px] sm:text-xs font-semibold text-slate-600 leading-none">
+              গণপ্রজাতন্ত্রী বাংলাদেশ সরকার
+            </div>
+            <div className="text-base sm:text-xl font-black text-[#006A4E] leading-tight flex items-center gap-2 mt-0.5">
+              <span>Court<span className="text-[#D92534]">Diary</span></span>
+              <span className="hidden sm:inline-block text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 border border-emerald-300 tracking-wider uppercase">
+                e-Judiciary
               </span>
             </div>
-            <div className="text-[11px] sm:text-[12px] font-medium text-slate-600 leading-tight mt-0.5">
-              Court Case Diary & Judicial Ledger System
+            <div className="text-[10px] sm:text-[11px] font-medium text-slate-500 leading-tight">
+              National Judicial Case Diary & Bench Management Portal
             </div>
           </div>
         </div>
@@ -162,17 +174,42 @@ export const GovHeader: React.FC<{ rightContent?: React.ReactNode }> = ({ rightC
         {rightContent ? (
           <div className="shrink-0">{rightContent}</div>
         ) : (
-          <div className="hidden lg:flex items-center gap-4 shrink-0 text-right">
-            <div className="border-r border-slate-200 pr-4">
-              <div className="text-[10px] uppercase font-semibold text-slate-400">Help Desk Hotline</div>
-              <div className="text-xs font-bold text-[#006A4E] font-mono">+01726427751</div>
-            </div>
-            <div>
-              <div className="text-[10px] uppercase font-semibold text-slate-400">System Security</div>
-              <div className="text-[11px] font-semibold text-slate-700 flex items-center gap-1 justify-end">
-                <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
-                <span>ISO 27001 Certified</span>
+          <div className="flex items-center gap-3 sm:gap-5 shrink-0 text-right">
+            {/* Helpline (eTax NBR signature) */}
+            <div className="hidden sm:flex items-center gap-2.5 bg-emerald-50/80 border border-emerald-200/80 px-3 py-1.5 rounded-lg text-left">
+              <PhoneCall className="w-4 h-4 text-[#006A4E] shrink-0" />
+              <div>
+                <div className="text-[10px] uppercase font-bold text-slate-500 leading-none">Helpline</div>
+                <div className="text-xs font-black text-[#006A4E] font-mono leading-tight">
+                  09612-779077 <span className="text-[10px] font-normal text-slate-500">/ 01726427751</span>
+                </div>
               </div>
+            </div>
+
+            {/* Language Switcher */}
+            <div className="flex items-center border border-slate-300 rounded-lg overflow-hidden text-xs bg-slate-50 p-0.5 shadow-xs">
+              <button
+                type="button"
+                onClick={() => onToggleLang?.('en')}
+                className={`px-2.5 py-1 rounded text-[11px] font-semibold transition-all ${
+                  activeLang === 'en'
+                    ? 'bg-[#006A4E] text-white shadow-xs'
+                    : 'text-slate-600 hover:text-slate-900'
+                }`}
+              >
+                English
+              </button>
+              <button
+                type="button"
+                onClick={() => onToggleLang?.('bn')}
+                className={`px-2.5 py-1 rounded text-[11px] font-semibold transition-all ${
+                  activeLang === 'bn'
+                    ? 'bg-[#006A4E] text-white shadow-xs'
+                    : 'text-slate-600 hover:text-slate-900'
+                }`}
+              >
+                বাংলা
+              </button>
             </div>
           </div>
         )}

@@ -309,6 +309,13 @@ export const api = {
     });
   },
 
+  async resetDatabase(confirmation: string): Promise<{ message: string; backupFile?: string }> {
+    return request('/api/backup/reset', {
+      method: 'POST',
+      body: JSON.stringify({ confirmation }),
+    });
+  },
+
   async getAuditLogs(): Promise<AuditLogItem[]> {
     return request('/api/audit-logs');
   },

@@ -319,7 +319,7 @@ export const CaseDetailModal: React.FC<Props> = ({
 
                   <button
                     onClick={() => setShowAddProceeding(!showAddProceeding)}
-                    className="flex items-center gap-1 px-2.5 py-1 bg-amber-600 hover:bg-amber-500 text-neutral-950 font-semibold rounded transition-colors text-xs"
+                    className="btn-gov-primary flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold shadow-md transition-all active:scale-95 cursor-pointer whitespace-nowrap"
                   >
                     <Plus className="w-3.5 h-3.5" />
                     <span>{showAddProceeding ? 'Cancel' : 'Record Hearing Entry'}</span>

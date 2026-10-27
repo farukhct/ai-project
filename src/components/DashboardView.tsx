@@ -213,15 +213,15 @@ export const DashboardView: React.FC<Props> = ({
         <div className="flex items-center gap-2">
           <button
             onClick={() => onNavigate('new-case')}
-            className="flex items-center gap-1.5 bg-amber-600 hover:bg-amber-500 text-neutral-950 px-3 py-1.5 rounded text-xs font-semibold shadow-sm transition-colors"
+            className="btn-gov-primary flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-bold shadow-md transition-all active:scale-95 cursor-pointer whitespace-nowrap"
           >
-            <FilePlus2 className="w-3.5 h-3.5" />
+            <FilePlus2 className="w-4 h-4" />
             <span>Add New Case (Ctrl+N)</span>
           </button>
 
           <button
             onClick={() => onPrintPreview("Today's Case Diary", todayList)}
-            className="flex items-center gap-1.5 bg-neutral-800 hover:bg-neutral-700 text-neutral-200 px-3 py-1.5 rounded text-xs font-medium border border-neutral-700 transition-colors"
+            className="flex items-center gap-1.5 bg-neutral-800 hover:bg-neutral-700 text-neutral-200 px-3 py-1.5 rounded-lg text-xs font-medium border border-neutral-700 transition-all shadow-xs active:scale-95 cursor-pointer whitespace-nowrap"
           >
             <Printer className="w-3.5 h-3.5" />
             <span>Print Today's List</span>

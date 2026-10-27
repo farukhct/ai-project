@@ -49,10 +49,10 @@ export const Sidebar: React.FC<Props> = ({
 
   const navItemClass = (viewName: string) => {
     const isActive = currentView === viewName;
-    return `w-full flex items-center justify-between px-3 py-2 text-xs font-semibold rounded-lg transition-all form-pressable cursor-pointer ${
+    return `w-full flex items-center justify-between px-3 py-2 text-xs font-semibold rounded-lg transition-all duration-200 cursor-pointer ${
       isActive
-        ? 'bg-[#006A4E]/15 text-[#006A4E] border border-[#006A4E]/30 shadow-xs'
-        : 'text-neutral-400 hover:text-neutral-100 hover:bg-neutral-800/70 border border-transparent'
+        ? 'bg-gradient-to-r from-emerald-600/20 to-emerald-600/5 text-emerald-600 dark:text-emerald-400 border border-emerald-600/30 shadow-xs translate-x-1'
+        : 'text-neutral-400 hover:text-neutral-100 hover:bg-neutral-800/70 border border-transparent hover:-translate-y-0.5'
     }`;
   };
 
@@ -63,10 +63,12 @@ export const Sidebar: React.FC<Props> = ({
         <BangladeshGovEmblem className="w-9 h-9 shrink-0 drop-shadow-xs" />
         <div className="overflow-hidden">
           <div className="font-bold text-neutral-100 text-sm tracking-tight truncate flex items-center gap-1">
-            <span className="text-[#006A4E]">Court</span>
-            <span className="text-[#D92534]">Diary</span>
+            <span>Court<span className="text-[#D92534]">Diary</span></span>
+            <span className="text-[9px] px-1.5 py-0.2 rounded bg-emerald-100/10 text-emerald-400 border border-emerald-500/30 uppercase font-mono">
+              e-Gov
+            </span>
           </div>
-          <div className="text-[10px] text-neutral-400 font-medium tracking-wide truncate">
+          <div className="text-[10px] text-neutral-400 truncate">
             Judicial Registry System
           </div>
         </div>
@@ -85,7 +87,7 @@ export const Sidebar: React.FC<Props> = ({
               className={navItemClass('dashboard')}
             >
               <span className="flex items-center gap-2.5 truncate">
-                <LayoutDashboard className="w-4 h-4 shrink-0 text-amber-500/90" />
+                <LayoutDashboard className="w-4 h-4 shrink-0 text-emerald-500/90" />
                 <span>Dashboard</span>
               </span>
             </button>
@@ -141,10 +143,10 @@ export const Sidebar: React.FC<Props> = ({
             >
               <span className="flex items-center gap-2.5 truncate">
                 <Calendar className="w-4 h-4 shrink-0 text-emerald-400" />
-                <span>Today's Cases</span>
+                <span>Today's Hearings</span>
               </span>
               {todayCount > 0 && (
-                <span className="font-mono text-[10px] bg-emerald-950 text-emerald-300 border border-emerald-800 px-1.5 py-0.2 rounded-full tabular-nums">
+                <span className="text-[10px] font-bold px-1.5 py-0.2 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
                   {todayCount}
                 </span>
               )}
@@ -156,10 +158,10 @@ export const Sidebar: React.FC<Props> = ({
             >
               <span className="flex items-center gap-2.5 truncate">
                 <Clock className="w-4 h-4 shrink-0 text-amber-400" />
-                <span>Upcoming Cases</span>
+                <span>Upcoming Cause List</span>
               </span>
               {upcomingCount > 0 && (
-                <span className="font-mono text-[10px] bg-amber-950 text-amber-300 border border-amber-800 px-1.5 py-0.2 rounded-full tabular-nums">
+                <span className="text-[10px] font-bold px-1.5 py-0.2 rounded-full bg-amber-500/20 text-amber-400 border border-amber-500/30">
                   {upcomingCount}
                 </span>
               )}
@@ -171,10 +173,10 @@ export const Sidebar: React.FC<Props> = ({
             >
               <span className="flex items-center gap-2.5 truncate">
                 <AlertOctagon className="w-4 h-4 shrink-0 text-rose-400" />
-                <span>Overdue Cases</span>
+                <span>Overdue & Pending</span>
               </span>
               {overdueCount > 0 && (
-                <span className="font-mono text-[10px] bg-rose-950 text-rose-300 border border-rose-800 px-1.5 py-0.2 rounded-full tabular-nums">
+                <span className="text-[10px] font-bold px-1.5 py-0.2 rounded-full bg-rose-500/20 text-rose-400 border border-rose-500/30">
                   {overdueCount}
                 </span>
               )}
@@ -185,19 +187,18 @@ export const Sidebar: React.FC<Props> = ({
               className={navItemClass('reports-generator')}
             >
               <span className="flex items-center gap-2.5 truncate">
-                <FileSpreadsheet className="w-4 h-4 shrink-0 text-neutral-400" />
-                <span>Custom Reports</span>
+                <FileSpreadsheet className="w-4 h-4 shrink-0 text-sky-400" />
+                <span>Reports & Exports</span>
               </span>
             </button>
           </div>
         </div>
 
-        {/* Administration Section */}
+        {/* System Administration */}
         {isAdmin && (
           <div>
-            <div className="px-2 pb-1 text-[10px] font-semibold text-neutral-500 uppercase tracking-wider flex items-center justify-between">
-              <span>Administration</span>
-              <Shield className="w-3 h-3 text-amber-500/70" />
+            <div className="px-2 pb-1 text-[10px] font-semibold text-neutral-500 uppercase tracking-wider">
+              Administration
             </div>
             <div className="space-y-0.5">
               <button
@@ -205,8 +206,8 @@ export const Sidebar: React.FC<Props> = ({
                 className={navItemClass('admin-results')}
               >
                 <span className="flex items-center gap-2.5 truncate">
-                  <CheckSquare className="w-4 h-4 shrink-0 text-teal-400" />
-                  <span>Result Types</span>
+                  <CheckSquare className="w-4 h-4 shrink-0 text-emerald-400" />
+                  <span>Result Categories</span>
                 </span>
               </button>
 
@@ -215,8 +216,8 @@ export const Sidebar: React.FC<Props> = ({
                 className={navItemClass('admin-users')}
               >
                 <span className="flex items-center gap-2.5 truncate">
-                  <Users className="w-4 h-4 shrink-0 text-indigo-400" />
-                  <span>User Accounts</span>
+                  <Users className="w-4 h-4 shrink-0 text-purple-400" />
+                  <span>Bench Users & Roles</span>
                 </span>
               </button>
 
@@ -225,18 +226,8 @@ export const Sidebar: React.FC<Props> = ({
                 className={navItemClass('admin-backup')}
               >
                 <span className="flex items-center gap-2.5 truncate">
-                  <Database className="w-4 h-4 shrink-0 text-emerald-400" />
+                  <Database className="w-4 h-4 shrink-0 text-amber-400" />
                   <span>Backup & Restore</span>
-                </span>
-              </button>
-
-              <button
-                onClick={() => onNavigate('admin-logs')}
-                className={navItemClass('admin-logs')}
-              >
-                <span className="flex items-center gap-2.5 truncate">
-                  <History className="w-4 h-4 shrink-0 text-neutral-400" />
-                  <span>Audit Logs</span>
                 </span>
               </button>
 
@@ -246,74 +237,51 @@ export const Sidebar: React.FC<Props> = ({
               >
                 <span className="flex items-center gap-2.5 truncate">
                   <Settings className="w-4 h-4 shrink-0 text-neutral-400" />
-                  <span>System Settings</span>
+                  <span>Court Settings</span>
                 </span>
               </button>
             </div>
           </div>
         )}
-
-        {/* Help & About */}
-        <div>
-          <div className="px-2 pb-1 text-[10px] font-semibold text-neutral-500 uppercase tracking-wider">
-            Assistance
-          </div>
-          <div className="space-y-0.5">
-            <button
-              onClick={onOpenShortcuts}
-              className="w-full flex items-center justify-between px-3 py-2 text-xs font-medium text-neutral-400 hover:text-neutral-200 hover:bg-neutral-800/60 rounded-md transition-colors"
-            >
-              <span className="flex items-center gap-2.5 truncate">
-                <HelpCircle className="w-4 h-4 shrink-0 text-neutral-400" />
-                <span>Shortcuts</span>
-              </span>
-              <kbd className="text-[9px] font-mono text-neutral-500 bg-neutral-800/80 px-1 py-0.5 rounded">
-                ?
-              </kbd>
-            </button>
-
-            <button
-              onClick={() => onNavigate('about')}
-              className={navItemClass('about')}
-            >
-              <span className="flex items-center gap-2.5 truncate">
-                <FileText className="w-4 h-4 shrink-0 text-neutral-400" />
-                <span>About System</span>
-              </span>
-            </button>
-          </div>
-        </div>
       </div>
 
-      {/* Active Judicial Officer User Card */}
-      <div className="p-2.5 border-t border-neutral-800/80 bg-neutral-950/60">
-        <div className="flex items-center gap-2.5 px-1 py-1">
-          <img
-            src={judgeAvatar}
-            alt="Bench Officer"
-            className="w-8 h-8 rounded-full border border-neutral-700 object-cover shrink-0"
-            referrerPolicy="no-referrer"
-          />
-          <div className="flex-1 min-w-0">
-            <div className="text-xs font-medium text-neutral-200 truncate">
-              {currentUser?.fullName || 'Bench Officer'}
-            </div>
-            <div className="text-[10px] text-neutral-400 flex items-center gap-1 font-mono">
-              <span className={currentUser?.role === 'Administrator' ? 'text-amber-400' : 'text-neutral-400'}>
-                {currentUser?.role || 'Officer'}
-              </span>
-              <span>·</span>
-              <span className="text-emerald-400">Active</span>
+      {/* User Session & Logout Panel */}
+      <div className="p-3 border-t border-neutral-800/80 bg-neutral-950/60 space-y-2.5">
+        <div className="flex items-center justify-between gap-2">
+          <div className="flex items-center gap-2 min-w-0">
+            <img
+              src={judgeAvatar}
+              alt="Judge/Officer"
+              className="w-7 h-7 rounded-full object-cover border border-neutral-700 shrink-0 shadow-2xs"
+            />
+            <div className="overflow-hidden">
+              <div className="text-xs font-bold text-neutral-200 truncate">
+                {currentUser?.fullName || 'Judicial Officer'}
+              </div>
+              <div className="text-[10px] text-emerald-400 truncate font-medium">
+                {currentUser?.role || 'Bench Officer'}
+              </div>
             </div>
           </div>
 
           <button
             onClick={onLogout}
-            title="Log out of Court Dairy"
-            className="p-1.5 text-neutral-400 hover:text-rose-400 hover:bg-neutral-800 rounded transition-colors"
+            title="Sign out of portal"
+            className="p-1.5 text-neutral-400 hover:text-red-400 hover:bg-neutral-800/80 rounded-lg transition-all active:scale-95"
           >
             <LogOut className="w-4 h-4" />
           </button>
+        </div>
+
+        <div className="flex items-center justify-between pt-1 border-t border-neutral-800/60 text-[10px] text-neutral-400">
+          <button
+            onClick={onOpenShortcuts}
+            className="hover:text-emerald-400 transition-colors flex items-center gap-1"
+          >
+            <HelpCircle className="w-3 h-3" />
+            <span>Shortcuts (F1)</span>
+          </button>
+          <span className="font-mono text-neutral-500">v2.6</span>
         </div>
       </div>
     </aside>

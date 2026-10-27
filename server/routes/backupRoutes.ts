@@ -1,7 +1,7 @@
 import { Router, Response } from 'express';
 import fs from 'fs';
 import path from 'path';
-import { getDb, reloadDbFromBuffer, queryRows, logAudit, saveDb } from '../db.js';
+import { getDb, reloadDbFromBuffer, resetDatabase, queryRows, logAudit, saveDb } from '../db.js';
 import { requireAuth, requireAdmin, AuthenticatedRequest } from '../auth.js';
 
 const router = Router();
@@ -53,15 +53,35 @@ router.post('/backup/restore', requireAuth, requireAdmin, async (req: Authentica
     }
 
     // Reload database from buffer
-    reloadDbFromBuffer(buffer);
+    const freshDb = await reloadDbFromBuffer(buffer);
 
-    // Re-verify new database instance
-    const freshDb = await getDb();
     logAudit(freshDb, 'RESTORE_DATABASE', 'Database', null, `Restored database from uploaded backup file`, req.user?.username || 'Admin');
 
     res.json({ message: 'Database restored successfully. Application data reloaded.' });
   } catch (err: any) {
     res.status(500).json({ error: err.message || 'Failed to restore database' });
+  }
+});
+
+// One-Click Database Reset (requires explicit confirmation to protect user data)
+router.post('/backup/reset', requireAuth, requireAdmin, async (req: AuthenticatedRequest, res: Response) => {
+  try {
+    const { confirmation } = req.body;
+
+    if (confirmation !== 'CONFIRM_RESET') {
+      return res.status(400).json({
+        error: 'Explicit confirmation string "CONFIRM_RESET" is required to authorize database reset.'
+      });
+    }
+
+    const result = await resetDatabase(req.user?.username || 'Admin');
+
+    res.json({
+      message: 'Database reset successfully. All court cases and proceedings cleared. Safety backup saved to disk.',
+      backupFile: result.backupFile
+    });
+  } catch (err: any) {
+    res.status(500).json({ error: err.message || 'Failed to reset database' });
   }
 });
 

@@ -174,68 +174,68 @@ export const ReportsView: React.FC<Props> = ({
             </div>
           </div>
 
-          {/* Report Type Selector Tabs */}
-          <div className="flex flex-wrap items-center gap-1 bg-neutral-950 p-1 rounded-lg border border-neutral-800 text-xs">
+          {/* Report Type Selector Tabs (Animated & Responsive) */}
+          <div className="flex flex-wrap items-center gap-1.5 bg-neutral-950 p-1.5 rounded-lg border border-neutral-800 text-xs">
             <button
               onClick={() => setReportType('today')}
-              className={`px-2.5 py-1 rounded transition-colors font-medium ${
-                reportType === 'today' ? 'bg-amber-600 text-neutral-950 shadow-sm' : 'text-neutral-400 hover:text-white'
+              className={`px-3 py-1.5 rounded-md transition-all font-semibold active:scale-95 ${
+                reportType === 'today' ? 'bg-[#006A4E] text-white shadow-xs font-bold' : 'text-neutral-400 hover:text-white hover:bg-neutral-800/70'
               }`}
             >
               Today
             </button>
             <button
               onClick={() => setReportType('upcoming')}
-              className={`px-2.5 py-1 rounded transition-colors font-medium ${
-                reportType === 'upcoming' ? 'bg-amber-600 text-neutral-950 shadow-sm' : 'text-neutral-400 hover:text-white'
+              className={`px-3 py-1.5 rounded-md transition-all font-semibold active:scale-95 ${
+                reportType === 'upcoming' ? 'bg-[#006A4E] text-white shadow-xs font-bold' : 'text-neutral-400 hover:text-white hover:bg-neutral-800/70'
               }`}
             >
               Upcoming
             </button>
             <button
               onClick={() => setReportType('overdue')}
-              className={`px-2.5 py-1 rounded transition-colors font-medium ${
-                reportType === 'overdue' ? 'bg-amber-600 text-neutral-950 shadow-sm' : 'text-neutral-400 hover:text-white'
+              className={`px-3 py-1.5 rounded-md transition-all font-semibold active:scale-95 ${
+                reportType === 'overdue' ? 'bg-[#006A4E] text-white shadow-xs font-bold' : 'text-neutral-400 hover:text-white hover:bg-neutral-800/70'
               }`}
             >
               Overdue
             </button>
             <button
               onClick={() => setReportType('date-range')}
-              className={`px-2.5 py-1 rounded transition-colors font-medium ${
-                reportType === 'date-range' ? 'bg-amber-600 text-neutral-950 shadow-sm' : 'text-neutral-400 hover:text-white'
+              className={`px-3 py-1.5 rounded-md transition-all font-semibold active:scale-95 ${
+                reportType === 'date-range' ? 'bg-[#006A4E] text-white shadow-xs font-bold' : 'text-neutral-400 hover:text-white hover:bg-neutral-800/70'
               }`}
             >
               Date Range
             </button>
             <button
               onClick={() => setReportType('result-wise')}
-              className={`px-2.5 py-1 rounded transition-colors font-medium ${
-                reportType === 'result-wise' ? 'bg-amber-600 text-neutral-950 shadow-sm' : 'text-neutral-400 hover:text-white'
+              className={`px-3 py-1.5 rounded-md transition-all font-semibold active:scale-95 ${
+                reportType === 'result-wise' ? 'bg-[#006A4E] text-white shadow-xs font-bold' : 'text-neutral-400 hover:text-white hover:bg-neutral-800/70'
               }`}
             >
               Result-wise
             </button>
             <button
               onClick={() => setReportType('monthly')}
-              className={`px-2.5 py-1 rounded transition-colors font-medium ${
-                reportType === 'monthly' ? 'bg-amber-600 text-neutral-950 shadow-sm' : 'text-neutral-400 hover:text-white'
+              className={`px-3 py-1.5 rounded-md transition-all font-semibold active:scale-95 ${
+                reportType === 'monthly' ? 'bg-[#006A4E] text-white shadow-xs font-bold' : 'text-neutral-400 hover:text-white hover:bg-neutral-800/70'
               }`}
             >
               Monthly
             </button>
             <button
               onClick={() => setReportType('yearly')}
-              className={`px-2.5 py-1 rounded transition-colors font-medium ${
-                reportType === 'yearly' ? 'bg-amber-600 text-neutral-950 shadow-sm' : 'text-neutral-400 hover:text-white'
+              className={`px-3 py-1.5 rounded-md transition-all font-semibold active:scale-95 ${
+                reportType === 'yearly' ? 'bg-[#006A4E] text-white shadow-xs font-bold' : 'text-neutral-400 hover:text-white hover:bg-neutral-800/70'
               }`}
             >
               Yearly
             </button>
             <button
               onClick={() => setReportType('all')}
-              className={`px-2.5 py-1 rounded transition-colors font-medium ${
-                reportType === 'all' ? 'bg-amber-600 text-neutral-950 shadow-sm' : 'text-neutral-400 hover:text-white'
+              className={`px-3 py-1.5 rounded-md transition-all font-semibold active:scale-95 ${
+                reportType === 'all' ? 'bg-[#006A4E] text-white shadow-xs font-bold' : 'text-neutral-400 hover:text-white hover:bg-neutral-800/70'
               }`}
             >
               All Cases
@@ -267,7 +267,7 @@ export const ReportsView: React.FC<Props> = ({
               </div>
               <button
                 onClick={generateReport}
-                className="px-3 py-1 bg-amber-600 hover:bg-amber-500 text-neutral-950 font-semibold rounded text-xs"
+                className="btn-gov-primary px-3 py-1.5 rounded-lg text-xs font-bold shadow-md transition-all active:scale-95 cursor-pointer whitespace-nowrap"
               >
                 Apply Range
               </button>

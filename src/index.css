@@ -6,7 +6,7 @@ body.light,
 .light {
   color-scheme: light;
 
-  /* Bangladesh Government Official Portal Theme */
+  /* Bangladesh Government eTax Official Portal Theme */
   --neutral-950: #ffffff;
   --neutral-925: #f0f4f8;
   --neutral-900: #ffffff;
@@ -22,7 +22,7 @@ body.light,
   --neutral-100: #020617;
   --neutral-50: #000000;
 
-  /* Primary Brand Color: Government Forest Green (#006A4E) */
+  /* Primary Brand Color: Government Forest Green (#006A4E) & Emerald */
   --amber-950: #ecfdf5;
   --amber-800: #004d39;
   --amber-400: #006a4e;
@@ -31,6 +31,8 @@ body.light,
 
   --emerald-950: #ecfdf5;
   --emerald-800: #006a4e;
+  --emerald-700: #00543e;
+  --emerald-600: #006a4e;
   --emerald-400: #059669;
   --emerald-300: #10b981;
 
@@ -55,7 +57,7 @@ body.dark,
 .dark {
   color-scheme: dark;
 
-  /* Dark Government Forest & Navy Theme */
+  /* Dark Government Forest & Slate Theme */
   --neutral-950: #071612;
   --neutral-925: #0b1f1a;
   --neutral-900: #0e2922;
@@ -80,6 +82,8 @@ body.dark,
 
   --emerald-950: #022c22;
   --emerald-800: #006a4e;
+  --emerald-700: #00543e;
+  --emerald-600: #006a4e;
   --emerald-400: #34d399;
   --emerald-300: #6ee7b7;
 
@@ -106,7 +110,7 @@ body.dark,
   --color-neutral-850: var(--neutral-850);
   --color-neutral-800: var(--neutral-800);
   --color-neutral-750: var(--neutral-750);
-  --color-neutral-700: var(--neutral-700);
+  --color-neutral-700: var(--neutral-750);
   --color-neutral-600: var(--neutral-600);
   --color-neutral-500: var(--neutral-500);
   --color-neutral-400: var(--neutral-400);
@@ -149,6 +153,97 @@ body.dark,
     color: var(--neutral-100);
     transition: background-color 0.2s ease, color 0.2s ease;
   }
+}
+
+/* ==========================================================
+   ANIMATED & RESPONSIVE BUTTON SYSTEM (ALL BUTTONS ACROSS PROJECT)
+   ========================================================== */
+
+/* Universal Animated & Responsive Button Behavior */
+button {
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  user-select: none;
+  touch-action: manipulation;
+  cursor: pointer;
+}
+
+button:not(:disabled):hover {
+  transform: translateY(-1.5px);
+}
+
+button:not(:disabled):active {
+  transform: translateY(0.5px) scale(0.98);
+}
+
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+/* Micro-interaction on icons inside buttons */
+button svg {
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+button:not(:disabled):hover svg:not(.animate-spin) {
+  transform: scale(1.08);
+}
+
+button:not(:disabled):active svg:not(.animate-spin) {
+  transform: scale(0.95);
+}
+
+/* Focused Accessible Button Outline */
+button:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(0, 106, 78, 0.35);
+}
+
+/* Custom Government Portal Button Classes */
+.btn-gov-primary {
+  background: linear-gradient(135deg, #006a4e 0%, #008763 50%, #006a4e 100%);
+  background-size: 200% 200%;
+  color: #ffffff;
+  font-weight: 700;
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 12px -2px rgba(0, 106, 78, 0.35);
+  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.btn-gov-primary:hover:not(:disabled) {
+  background-position: right center;
+  box-shadow: 0 6px 18px -2px rgba(0, 106, 78, 0.5);
+  transform: translateY(-2px);
+}
+
+.btn-gov-secondary {
+  background: #ffffff;
+  border: 1.5px solid #006a4e;
+  color: #006a4e;
+  font-weight: 600;
+  border-radius: 0.5rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.btn-gov-secondary:hover:not(:disabled) {
+  background: #ecfdf5;
+  box-shadow: 0 4px 12px -2px rgba(0, 106, 78, 0.15);
+  transform: translateY(-1.5px);
+}
+
+.btn-gov-danger {
+  background: linear-gradient(135deg, #d92534 0%, #ef4444 100%);
+  color: #ffffff;
+  font-weight: 600;
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 12px -2px rgba(217, 37, 52, 0.3);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.btn-gov-danger:hover:not(:disabled) {
+  box-shadow: 0 6px 18px -2px rgba(217, 37, 52, 0.45);
+  transform: translateY(-2px);
 }
 
 /* Light mode specific UI polish */
@@ -262,12 +357,12 @@ html.light textarea::placeholder {
   }
 }
 
-@keyframes subtleGlowPulse {
-  0%, 100% {
-    box-shadow: 0 0 15px -3px rgba(245, 158, 11, 0.15);
+@keyframes marqueeSlow {
+  0% {
+    transform: translateX(100%);
   }
-  50% {
-    box-shadow: 0 0 25px 2px rgba(245, 158, 11, 0.3);
+  100% {
+    transform: translateX(-100%);
   }
 }
 
@@ -288,8 +383,11 @@ html.light textarea::placeholder {
   animation: slideUpFade 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
-.glow-amber-subtle {
-  animation: subtleGlowPulse 4s infinite ease-in-out;
+.animate-marquee {
+  animation: marqueeSlow 25s linear infinite;
+}
+.animate-marquee:hover {
+  animation-play-state: paused;
 }
 
 /* Modern Form Field Styling */
@@ -308,4 +406,3 @@ html.light textarea::placeholder {
 .form-pressable:active {
   transform: scale(0.97);
 }
-

@@ -50,12 +50,21 @@ export interface AuthenticatedRequest extends Request {
 }
 
 export async function requireAuth(req: AuthenticatedRequest, res: Response, next: NextFunction) {
+  let token: string | undefined;
+
   const authHeader = req.headers.authorization;
-  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+  if (authHeader && authHeader.startsWith('Bearer ')) {
+    token = authHeader.substring(7).trim();
+  } else if (typeof req.query.auth === 'string') {
+    token = req.query.auth;
+  } else if (typeof req.query.token === 'string') {
+    token = req.query.token;
+  }
+
+  if (!token) {
     return res.status(401).json({ error: 'Authentication required. Please log in.' });
   }
 
-  const token = authHeader.substring(7).trim();
   const session = activeSessions.get(token);
 
   if (!session || session.expiresAt < Date.now()) {

@@ -66,7 +66,7 @@ export const PrintPreviewModal: React.FC<Props> = ({
 
             <button
               onClick={handlePrint}
-              className="flex items-center gap-1.5 px-4 py-1.5 bg-amber-600 hover:bg-amber-500 text-neutral-950 font-semibold text-xs rounded shadow-sm transition-colors"
+              className="btn-gov-primary flex items-center gap-1.5 px-4 py-1.5 rounded-lg text-xs font-bold shadow-md transition-all active:scale-95 cursor-pointer whitespace-nowrap"
             >
               <Printer className="w-3.5 h-3.5" />
               <span>Print (System Dialog)</span>
